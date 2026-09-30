@@ -17,6 +17,7 @@
   --bg:var(--cream); --fg:var(--brown); --surface:var(--paper);
   --muted:#8C5A50; --line:#DFE2BE;
   --hero-bg:var(--brown); --hero-stripe:#690D0D; --hero-fg:var(--cream);
+  --rootside:#86A02E;
   --ok:#4E6A1C; --ok-bg:#E6EDC6; --bad:#A3261A; --bad-bg:#F6D6CF;
   --display:"Bowlby One","Arial Black",Impact,sans-serif;
   --script:"Yellowtail","Brush Script MT",cursive;
@@ -26,11 +27,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#240808; --fg:#F6F4DF; --surface:#361010; --muted:#D6B3A8; --line:#571A1A;
   --hero-bg:#560A0A; --hero-stripe:#4A0808; --hero-fg:#F6F4DF;
-  --ok:#C4D878; --ok-bg:#2F3515; --bad:#F29A8A; --bad-bg:#4A1616; color-scheme:dark}}
+  --rootside:#ACC048; --ok:#C4D878; --ok-bg:#2F3515; --bad:#F29A8A; --bad-bg:#4A1616; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#240808; --fg:#F6F4DF; --surface:#361010; --muted:#D6B3A8; --line:#571A1A;
   --hero-bg:#560A0A; --hero-stripe:#4A0808; --hero-fg:#F6F4DF;
-  --ok:#C4D878; --ok-bg:#2F3515; --bad:#F29A8A; --bad-bg:#4A1616; color-scheme:dark}
+  --rootside:#ACC048; --ok:#C4D878; --ok-bg:#2F3515; --bad:#F29A8A; --bad-bg:#4A1616; color-scheme:dark}
 
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.5}
@@ -75,7 +76,7 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outlin
 .unit-banner h3{margin:0;font-family:var(--display);font-size:20px;line-height:1.1}
 .unit-banner small{font-weight:600;opacity:.8;display:block}
 .unit-banner .count{font-family:var(--display);font-size:14px;background:var(--pink);color:var(--brown);border-radius:999px;padding:4px 10px;white-space:nowrap}
-.path{display:flex;flex-direction:column;align-items:center;gap:14px;padding-block:6px}
+.path{display:flex;flex-direction:column;align-items:center;gap:72px;padding-block:6px 40px}
 .node{position:relative;width:84px;height:84px;border:none;background:none;padding:0;display:grid;place-items:center}
 .node .disc{width:76px;height:76px;border-radius:50%;display:grid;place-items:center;border:4px solid var(--brown);box-shadow:0 6px 0 var(--brown);transition:transform .12s}
 .node:active .disc{transform:translateY(4px);box-shadow:0 2px 0 var(--brown)}
@@ -129,7 +130,7 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outlin
 
 /* tab bar */
 .tabbar{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-top:3px solid var(--fg);padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px));z-index:5}
-.tabbar nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.tabbar nav{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);gap:4px}
 .tab{border:none;background:none;border-radius:12px;padding:8px 4px;display:flex;flex-direction:column;align-items:center;gap:2px;font-weight:800;font-size:13px;color:var(--muted)}
 .tab svg{width:24px;height:24px}
 .tab[aria-selected="true"]{background:var(--pink);color:var(--brown)}
@@ -353,6 +354,243 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outlin
 .daily-img blockquote{margin:0;font-size:clamp(16px,4.6vw,20px);font-weight:600;line-height:1.4;text-wrap:pretty;text-shadow:0 1px 8px rgba(0,0,0,.35)}
 .daily-img cite{font-family:var(--display);font-style:normal;font-size:15px;color:#ACC048}
 .daily .row{margin-top:4px}
+
+/* ---- root path between lesson nodes ---- */
+.path{position:relative}
+.path .node{z-index:1}
+.rootpath{position:absolute;left:50%;top:0;width:1px;overflow:visible;pointer-events:none}
+.rootpath{color:var(--fg)}
+.rp-base{fill:none;stroke:var(--line);stroke-width:6;stroke-linecap:round;stroke-dasharray:.5 12}
+.rl-off path{fill:var(--line);opacity:.75}
+.rh-off{fill:none;stroke:var(--line);stroke-width:1;stroke-linecap:round;opacity:.8}
+.rp-grown{fill:currentColor}
+.rp-bark{fill:none;stroke:var(--pink);stroke-width:1.4;stroke-linecap:round;stroke-dasharray:10 26;opacity:.35}
+.rl-on path{fill:currentColor}
+.rl-on path.d1{opacity:.92}.rl-on path.d0{opacity:.82}
+.rh-on,.rh-off{display:none}
+.rp-tip{fill:var(--line)}
+.rp-tip.on{fill:var(--fg);opacity:.6}
+@media (prefers-reduced-motion:no-preference){
+ .rp-fresh{animation:growRoot 1.6s .3s cubic-bezier(.5,0,.2,1) both}
+ .rl-fresh{animation:growRoot .9s 1.5s cubic-bezier(.3,0,.2,1) both}
+ .rl-on path,.rl-off path{transform-box:fill-box}
+}
+@keyframes growRoot{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+
+/* ---- Sprout mascot ---- */
+.sprout{width:72px;height:72px;flex:none;overflow:visible}
+.buddy{display:flex;align-items:center;gap:12px}
+.bubble{position:relative;margin:0;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px 14px;font-weight:700;line-height:1.35;min-width:0}
+.bubble::before{content:"";position:absolute;left:-9px;top:50%;width:14px;height:14px;background:var(--surface);border-left:2px solid var(--line);border-bottom:2px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+.fb-top{display:flex;align-items:center;gap:10px}
+.fb-sprout{width:54px;height:54px}
+.fin-sprout{width:96px;height:96px;margin-bottom:-18px;position:relative;z-index:2}
+.ob-sprout{position:absolute;right:14px;bottom:10px;width:84px;height:84px}
+@media (prefers-reduced-motion:no-preference){
+ .sprout.wave .arm-l{transform-origin:24px 70px;animation:wave 1.2s ease-in-out infinite}
+ .sprout.happy,.sprout.cheer{animation:hop .6s ease-in-out 2}
+ .sprout.cheer .leaves{transform-origin:56px 30px;animation:wiggle .5s ease-in-out infinite alternate}
+ .sprout.sad .leaves{transform-origin:56px 30px;animation:droop .6s ease forwards}
+ .buddy .sprout.wave{animation:bob 3s ease-in-out infinite}
+}
+@keyframes wave{0%,100%{transform:rotate(0)}50%{transform:rotate(28deg)}}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes wiggle{from{transform:rotate(-8deg)}to{transform:rotate(8deg)}}
+@keyframes droop{to{transform:translateY(3px) scaleY(.92)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+
+/* ---- tab transitions + continue pulse ---- */
+#view{display:flex;flex-direction:column;gap:28px}
+#view.in-r{animation:inR .32s cubic-bezier(.2,.7,.3,1)}
+#view.in-l{animation:inL .32s cubic-bezier(.2,.7,.3,1)}
+@keyframes inR{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(-28px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:no-preference){.cont{animation:pulse 2.4s ease-in-out infinite}}
+@keyframes pulse{0%,100%{box-shadow:0 4px 0 var(--brown),0 0 0 0 rgba(172,192,72,.55)}60%{box-shadow:0 4px 0 var(--brown),0 0 0 12px rgba(172,192,72,0)}}
+.cont:active{animation:none}
+
+/* ---- seasons ---- */
+.season-fx{position:absolute;inset:0;z-index:-1;pointer-events:none;display:none}
+:root[data-season="christmas"] .season-fx{display:block;background-image:radial-gradient(2px 2px at 20% 30%,#F6F4DF 50%,transparent 51%),radial-gradient(3px 3px at 60% 10%,#F6F4DF 50%,transparent 51%),radial-gradient(2px 2px at 80% 50%,#F6F4DF 50%,transparent 51%),radial-gradient(2.5px 2.5px at 35% 70%,#F6F4DF 50%,transparent 51%),radial-gradient(2px 2px at 90% 85%,#F6F4DF 50%,transparent 51%),radial-gradient(3px 3px at 10% 90%,#F6F4DF 50%,transparent 51%);background-size:180px 180px;opacity:.8}
+@media (prefers-reduced-motion:no-preference){:root[data-season="christmas"] .season-fx{animation:snow 9s linear infinite}}
+@keyframes snow{to{background-position:0 180px,20px 180px,-10px 180px,15px 180px,-20px 180px,5px 180px}}
+:root[data-season="easter"] .season-fx{display:block;background:radial-gradient(60% 55% at 85% 105%,rgba(246,244,223,.55),rgba(172,192,72,.25) 45%,transparent 70%),repeating-conic-gradient(from 180deg at 85% 105%,rgba(246,244,223,.14) 0 6deg,transparent 6deg 18deg)}
+.season-card{background:var(--brown);color:var(--cream);border-radius:22px;padding:18px 20px;display:flex;flex-direction:column;gap:6px;border:3px solid var(--pink);--tex-img:var(--t-swirl);--tex-o:.25}
+.season-card::before{width:160px;height:160px;right:-40px;top:-40px;-webkit-mask-size:contain;mask-size:contain}
+.season-card .label{color:var(--pink)}
+.season-card blockquote{margin:0;font-size:18px;font-weight:600;line-height:1.4}
+.season-card cite{font-family:var(--display);font-style:normal;color:var(--pink)}
+
+/* ---- laptop layout ---- */
+@media (min-width:1000px){
+ body.wide .app{max-width:1180px;margin-left:max(250px,calc((100vw - 1180px)/2 + 125px));margin-right:auto;padding-inline:32px;padding-bottom:48px}
+ body.wide #view > *:not(.learn-grid){max-width:780px;width:100%}
+ body.wide .tabbar{top:0;bottom:0;right:auto;width:220px;border-top:none;border-right:3px solid var(--fg);padding:28px 16px}
+ body.wide .tabbar nav{display:flex;flex-direction:column;gap:6px;max-width:none}
+ body.wide .tabbar nav::before{content:"ROOTED";font-family:var(--display);font-size:26px;color:var(--fg);padding:0 12px 18px}
+ body.wide .tab{flex-direction:row;justify-content:flex-start;gap:12px;font-size:16px;padding:12px 14px}
+ body.wide .topbar .brand{visibility:hidden}
+ .learn-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:32px;align-items:start}
+ .col-main,.col-side{display:flex;flex-direction:column;gap:28px;min-width:0}
+ .col-side{position:sticky;top:20px}
+ .col-side .daily-img{max-height:62vh}
+ body.wide .toast{left:calc(50% + 110px)}
+}
+
+/* ---- friends ---- */
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.mycode{background:var(--brown);color:var(--cream);border-radius:22px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;--tex-img:var(--t-streaks);--tex-o:.3}
+.mycode::before{width:140px;top:-20px;bottom:-20px;right:120px;-webkit-mask-size:cover;mask-size:cover}
+.mycode .label{color:var(--pink)}
+.mycode .code{display:block;font-family:var(--display);font-size:38px;letter-spacing:.12em;line-height:1.1;color:var(--pink)}
+.mycode p{margin:2px 0 0;font-weight:600;opacity:.85;font-size:14px}
+.addf{display:flex;gap:8px;flex-wrap:wrap}
+.addf input{flex:1;min-width:140px;border:3px solid var(--brown);background:var(--surface);color:var(--fg);border-radius:14px;padding:10px 14px;font:inherit;font-weight:800;letter-spacing:.06em}
+.pals{display:flex;flex-direction:column;gap:10px}
+.pal{display:grid;grid-template-columns:auto 1fr auto auto;gap:12px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:10px 12px}
+.av{width:42px;height:42px;border-radius:50%;background:var(--pink);border:3px solid var(--brown);display:grid;place-items:center;font-family:var(--display);color:var(--brown);font-size:18px}
+.pal-main{min-width:0}.pal-main b{display:block}.pal-main span{font-size:13px;color:var(--muted);font-weight:600}
+.pal-main em{font-style:normal;color:var(--pink-deep);font-weight:800}
+.btn.pray{padding:8px 12px;font-size:14px;box-shadow:0 3px 0 var(--brown)}
+.board{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;counter-reset:none}
+.board li{display:grid;grid-template-columns:28px minmax(0,1.2fr) 1fr 44px;gap:10px;align-items:center;background:var(--surface);border:2px solid var(--line);border-radius:14px;padding:10px 12px;font-weight:700}
+.board li.me{border-color:var(--brown);background:var(--pink);color:var(--brown)}
+.board .rank{font-family:var(--display);font-size:16px}
+.board .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.board .bar{height:10px}
+.board b{text-align:right;font-variant-numeric:tabular-nums}
+.board .empty-li{display:block;color:var(--muted)}
+.fine{margin:0;font-size:13px;color:var(--muted);font-weight:600}
+@media (max-width:420px){.pal{grid-template-columns:auto 1fr auto}.pal .x{grid-column:2/4;justify-self:end}.board li{grid-template-columns:24px 1fr 38px}.board .bar{display:none}}
+/* ---- answered prayers ---- */
+.x.ans{color:var(--pink-deep)}
+.entry.answered{border-color:var(--pink);background:linear-gradient(0deg,var(--surface),var(--surface)) padding-box}
+.ans-tag{align-self:flex-start;background:var(--pink);color:var(--brown);border-radius:999px;padding:2px 10px;font-size:12px;font-weight:800}
+.ans-head{display:flex;align-items:baseline;justify-content:space-between;margin-top:6px}
+.ans-head .script{font-family:var(--script);font-size:28px;color:var(--pink-deep)}
+.ans-head b{font-family:var(--display);font-size:22px}
+/* ---- favorite verses wall ---- */
+.wall{columns:2 200px;column-gap:14px}
+.vcard{break-inside:avoid;margin:0 0 14px;position:relative;border-radius:14px;padding:22px 16px 12px;transform:rotate(var(--tilt));border:3px solid var(--brown);box-shadow:0 5px 0 var(--brown);display:flex;flex-direction:column;gap:8px;transition:transform .2s}
+.vcard:hover{transform:rotate(0) translateY(-3px)}
+.vcard p{margin:0;font-weight:600;line-height:1.4}
+.vcard cite{font-family:var(--display);font-style:normal;font-size:14px}
+.vcard .row{gap:2px;justify-content:flex-end}
+.vcard .x{color:inherit;opacity:.75}
+.vcard .pin{position:absolute;top:-9px;left:50%;width:18px;height:18px;border-radius:50%;background:var(--pink);border:3px solid var(--brown);transform:translateX(-50%)}
+.vcard.v0{background:#780F0F;color:#F6F4DF}.vcard.v0 cite{color:#ACC048}
+.vcard.v1{background:#ACC048;color:#3A0606}
+.vcard.v2{background:var(--paper);color:#780F0F}
+.vcard.v3{background:#F6F4DF;color:#3A0606}.vcard.v3 cite{color:#5F7020}
+/* ---- growth diary ---- */
+.diary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.dpage{background:var(--surface);border:2px dashed var(--line);border-radius:16px;padding:10px 6px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;min-width:0}
+.dpage svg{width:56px;height:70px;opacity:.35;filter:grayscale(1)}
+.dpage b{font-size:13px}.dpage span{font-size:11px;font-weight:700;color:var(--muted)}
+.dpage.on{border-style:solid;border-color:var(--brown)}
+.dpage.on svg{opacity:1;filter:none}
+@media (max-width:420px){.diary{grid-template-columns:repeat(2,1fr)}}
+/* ---- level up ---- */
+.levelup{position:fixed;inset:0;z-index:40;background:repeating-linear-gradient(90deg,#780F0F 0 40px,#690D0D 40px 80px);color:#F6F4DF;display:grid;place-items:center;padding:24px 16px calc(24px + env(safe-area-inset-bottom,0px));overflow-y:auto}
+.lu-in{max-width:420px;width:100%;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.lu-in .script{font-family:var(--script);font-size:40px;color:#ACC048;transform:rotate(-5deg)}
+.lu-in h2{font-family:var(--display);font-size:clamp(40px,12vw,64px);line-height:.95;margin:0}
+.lu-in p{margin:0;font-weight:600;max-width:32ch}
+.lu-verse{font-size:14px;opacity:.85}.lu-verse b{color:#ACC048;font-weight:800}
+.lu-stage{position:relative;width:180px;height:220px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle,rgba(172,192,72,.35),transparent 65%)}
+.lu-stage>div{position:absolute;inset:0;display:grid;place-items:center;color:#F6F4DF}
+.lu-stage svg{width:150px;height:190px}
+.lu-old{animation:luOut .8s ease forwards}
+.lu-new{opacity:0;transform:scale(.4) translateY(40px);transform-origin:50% 90%;animation:luIn 1.1s .6s cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes luOut{to{opacity:0;transform:scale(.8)}}
+@keyframes luIn{to{opacity:1;transform:none}}
+.levelup .btn{border-color:#F6F4DF}
+@media (prefers-reduced-motion:reduce){.lu-old{display:none}.lu-new{animation:none;opacity:1;transform:none}}
+
+/* the hidden toast must never sit on top of inputs and swallow clicks */
+.toast{pointer-events:none;visibility:hidden}
+.toast.show{visibility:visible}
+.addf input{position:relative;z-index:1;text-transform:uppercase}
+#gname{text-transform:none}
+
+.askf{display:flex;flex-direction:column;gap:12px}
+.askf input{width:100%;border:3px solid var(--brown);background:var(--surface);color:var(--fg);border-radius:14px;padding:14px 16px;font:inherit;font-size:22px;font-weight:800;letter-spacing:.08em}
+.ask-err{margin:0;min-height:1.2em;color:var(--bad);font-weight:700}
+.ob .sprout{width:80px;height:80px}
+
+/* ---- study room ---- */
+.btn.small{padding:8px 12px;font-size:14px;box-shadow:0 3px 0 var(--brown)}
+.sessions,.testis{display:flex;flex-direction:column;gap:10px}
+.sess{display:grid;grid-template-columns:auto 1fr;gap:14px;background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px}
+.sess.live{border-color:var(--brown);box-shadow:0 5px 0 var(--brown)}
+.sdate{width:58px;border:3px solid var(--brown);border-radius:12px;background:var(--pink);color:var(--brown);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 0;align-self:start}
+.sdate b{font-family:var(--display);font-size:24px;line-height:1}
+.sdate span{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.sbody{display:flex;flex-direction:column;gap:4px;min-width:0}
+.stitle{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.stitle b{font-size:17px}
+.smeta{font-size:13px;color:var(--muted);font-weight:600}
+.sbody .row{margin-top:6px}
+.livepill{display:inline-flex;align-items:center;gap:6px;background:var(--bad);color:#fff;border-radius:999px;padding:2px 10px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.livepill::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
+@media (prefers-reduced-motion:no-preference){.livepill::before{animation:blink 1.2s ease-in-out infinite}}
+@keyframes blink{50%{opacity:.2}}
+.testi{background:var(--surface);border:2px solid var(--line);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.testi header{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);font-weight:700}
+.testi header b{color:var(--fg);font-size:15px}
+.testi p{margin:0;font-weight:500;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+.av.sm{width:28px;height:28px;font-size:13px;border-width:2px}
+.amen{border:2px solid var(--line);background:var(--paper);color:var(--fg);border-radius:999px;padding:5px 14px;font-weight:800}
+.amen.on{background:var(--pink);border-color:var(--brown);color:var(--brown)}
+.flabel{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:-6px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.frow>div{display:flex;flex-direction:column;gap:10px;min-width:0}
+.askf input[type=date],.askf input[type=time],.askf input[type=url],#pTitle,#pPass{font-size:17px;letter-spacing:0}
+.askf textarea{width:100%;border:3px solid var(--brown);background:var(--surface);color:var(--fg);border-radius:14px;padding:14px 16px;font:inherit;font-size:17px;resize:vertical}
+.sd-hero{background:var(--brown);color:var(--cream);border-radius:22px;padding:20px;display:flex;flex-direction:column;gap:10px;--tex-img:var(--t-arches);--tex-o:.25}
+.sd-hero::before{width:200px;height:200px;right:-50px;bottom:-60px;-webkit-mask-size:contain;mask-size:contain}
+.sd-hero .label{color:var(--pink)}
+.sd-hero h2{font-family:var(--display);font-size:clamp(26px,7vw,36px);line-height:1;margin:0}
+.sd-hero p{margin:0;font-weight:600}
+.sd-hero .x{color:var(--cream)}
+.sd-hero .btn.ghost{background:var(--cream);color:var(--brown)}
+.going{display:flex;flex-wrap:wrap;gap:6px}
+.chip-p{display:inline-flex;align-items:center;gap:6px;background:rgba(246,244,223,.14);border-radius:999px;padding:3px 10px 3px 3px;font-weight:700;font-size:13px}
+.sd-hero .fine{color:var(--cream);opacity:.8}
+.chatbox{display:flex;flex-direction:column;gap:10px}
+.msgs{display:flex;flex-direction:column;gap:8px;max-height:44vh;overflow-y:auto;padding:4px 2px}
+.msg{align-self:flex-start;max-width:85%;background:var(--surface);border:2px solid var(--line);border-radius:16px 16px 16px 4px;padding:8px 12px}
+.msg.me{align-self:flex-end;background:var(--pink);border-color:var(--brown);color:var(--brown);border-radius:16px 16px 4px 16px}
+.msg b{font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.msg p{margin:2px 0;font-weight:600;overflow-wrap:anywhere}
+.msg span{font-size:11px;opacity:.7;font-weight:700}
+.chatf{display:flex;gap:8px}
+.chatf input{flex:1;min-width:0;border:3px solid var(--brown);background:var(--surface);color:var(--fg);border-radius:14px;padding:12px 14px;font:inherit;font-weight:600}
+a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+@media (max-width:420px){.topbar{gap:6px}.brand{font-size:18px;gap:6px}.brand svg{width:22px;height:22px}.stats{gap:5px}.stat{padding:3px 8px;font-size:13px;gap:4px}.stat svg{width:14px;height:14px}.iconbtn{width:30px;height:30px}.iconbtn svg{width:16px;height:16px}}
+
+/* ---- Ask Rooted ---- */
+.askcard{background:var(--surface);border:2px solid var(--line);border-radius:22px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;--tex-img:var(--t-swirl);--tex-o:.2}
+.askcard::before{width:120px;height:120px;right:-30px;top:-40px;-webkit-mask-size:contain;mask-size:contain}
+.askcard .sprout{width:58px;height:58px}
+.ask-copy b{display:block;font-size:16px}.ask-copy p{margin:2px 0 0;color:var(--muted);font-weight:600;font-size:14px}
+.askcard .buddy{flex:1;min-width:220px}
+.ar-hero{background:var(--brown);color:var(--cream);border-radius:22px;padding:16px 18px;--tex-img:var(--t-arches);--tex-o:.25}
+.ar-hero::before{width:170px;height:170px;right:-40px;bottom:-60px;-webkit-mask-size:contain;mask-size:contain}
+.ar-hero h2{font-family:var(--display);font-size:26px;line-height:1;margin:0 0 4px}
+.ar-hero p{margin:0;font-weight:600;opacity:.9}
+.askchat{display:flex;flex-direction:column;gap:12px}
+.askchat:empty{display:none}
+.ar-q{align-self:flex-end;max-width:85%;background:var(--pink);color:var(--brown);border:2px solid var(--brown);border-radius:18px 18px 4px 18px;padding:10px 14px;font-weight:700;overflow-wrap:anywhere}
+.ar-a{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+.ar-sprout{width:44px;height:44px}
+.ar-body{background:var(--surface);border:2px solid var(--line);border-radius:4px 18px 18px 18px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.ar-body p{margin:0;line-height:1.55;overflow-wrap:anywhere}
+.ar-think{color:var(--muted);font-weight:700}
+@media (prefers-reduced-motion:no-preference){.ar-think{animation:blink 1.4s ease-in-out infinite}}
+.ar-verse{margin:0;border-left:4px solid var(--pink);background:var(--paper);border-radius:0 12px 12px 0;padding:8px 12px;font-family:Georgia,"Times New Roman",serif;font-size:15px;line-height:1.5}
+.ar-verse cite{display:block;font-family:var(--display);font-style:normal;font-size:13px;color:var(--pink-deep);margin-top:4px}
+.qchips{display:flex;flex-wrap:wrap;gap:8px}
+.qchip{border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:7px 14px;font-weight:700;font-size:14px;text-align:left}
+.qchip:hover{border-color:var(--brown);background:var(--pink);color:var(--brown)}
 </style>
 </head>
 <body>
@@ -375,10 +613,12 @@ button:focus-visible,textarea:focus-visible{outline:3px solid var(--pink);outlin
   <button class="tab" role="tab" data-tab="learn" aria-selected="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M12 7v6M9 10h6"/></svg>Learn</button>
   <button class="tab" role="tab" data-tab="feel" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>Feelings</button>
   <button class="tab" role="tab" data-tab="practice" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h8l6 6v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M8 13h8M8 17h5M14 3v6h6"/></svg>Practice</button>
+  <button class="tab" role="tab" data-tab="friends" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.8"/><path d="M16 14.2c3.2.1 5.5 2.3 5.5 5.3"/></svg>Friends</button>
   <button class="tab" role="tab" data-tab="journey" aria-selected="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11M12 13c0-4 3-7 7-7 0 4-3 7-7 7zM12 15c0-3-2-6-7-6 0 4 3 6 7 6z"/></svg>Journey</button>
 </nav></div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="levelup" id="levelup" role="dialog" aria-modal="true" aria-label="Level up" hidden></div>
 <div class="lesson" id="lesson" hidden><div class="lesson-in" id="lessonIn"></div></div>
 
 <script>
@@ -461,6 +701,81 @@ const UNITS=[
    {t:"fill",q:"What did Jesus call His followers?",v:"Ye are the ___ of the world.",ref:"Matthew 5:14",o:["light","kings","judges","strength"],a:0,why:"Your life can point others to God, like a lamp in a dark room."},
    {t:"mc",q:"What does the Great Commission ask us to do?",o:["Stay quiet about our faith","Go and make disciples","Only pray for ourselves","Argue with unbelievers"],a:1,why:"Matthew 28:19–20. And Jesus promised to be with us as we go."},
    {t:"build",q:"Build Matthew 5:14.",w:"Ye are the light of the world",x:["salt","dark"],ref:"Matthew 5:14",why:"Let your light shine through kindness, honesty and love."}]}
+ ]},
+ {title:"Who is God?",sub:"Getting to know your Father",lessons:[
+  {id:"creator",name:"God the Creator",qs:[
+   {t:"fill",q:"What does the sky tell us about God?",v:"The heavens declare the glory of God; and the firmament sheweth his ___.",ref:"Psalm 19:1",o:["handywork","power","name","word"],a:0,why:"Every sunrise and every star is God’s artwork. Creation points us to the Creator."},
+   {t:"mc",q:"Who made the world and everything in it?",o:["God","It happened by chance","The angels","People"],a:0,why:"Acts 17:24 calls Him “God that made the world and all things therein.”"},
+   {t:"mc",q:"In whose image were people created? (Genesis 1:27)",o:["God’s image","The angels’ image","The animals’ image","No one’s image"],a:0,why:"You carry God’s image. That is why every person has worth, including you."},
+   {t:"build",q:"Build the end of 1 John 4:8.",w:"for God is love",x:["fear","law"],ref:"1 John 4:8",why:"Love isn’t just something God does. It is who He is."}]},
+  {id:"godlove",name:"God is Love",qs:[
+   {t:"fill",q:"Who loved first?",v:"We love him, because he first ___ us.",ref:"1 John 4:19",o:["loved","made","saved","called"],a:0,why:"God didn’t wait for us to love Him. He loved us first."},
+   {t:"mc",q:"When did Christ die for us, according to Romans 5:8?",o:["After we became good","While we were yet sinners","Only after we went to church","When we earned it"],a:1,why:"God showed His love while we were still far from Him. You don’t have to clean yourself up first."},
+   {t:"mc",q:"Can anything separate you from the love of God? (Romans 8:38–39)",o:["Yes, if you sin too much","Nothing can","Only death","Only doubt"],a:1,why:"Paul lists death, life, angels, the present and the future, and says none of them can separate us from God’s love."},
+   {t:"build",q:"Build the end of 1 John 4:19.",w:"because he first loved us",x:["we","later"],ref:"1 John 4:19",why:"Our love for God is always an answer to His love for us."}]},
+  {id:"trinity",name:"Father, Son & Spirit",qs:[
+   {t:"mc",q:"Christians believe in one God in three persons. Who are they?",o:["Father, Son and Holy Spirit","Moses, Elijah and Jesus","Peter, James and John","Abraham, Isaac and Jacob"],a:0,why:"One God, three persons. It’s a mystery, and the Bible shows all three at work together."},
+   {t:"fill",q:"What did the Father say at Jesus’ baptism?",v:"This is my beloved Son, in whom I am well ___.",ref:"Matthew 3:17",o:["pleased","known","loved","proud"],a:0,why:"The Father spoke, the Son was baptised and the Spirit came down. All three were there."},
+   {t:"mc",q:"At Jesus’ baptism, the Spirit came down like a…",o:["dove","eagle","flame","cloud"],a:0,why:"Matthew 3:16 says the Spirit of God descended like a dove."}]},
+  {id:"faithful",name:"God Keeps His Promises",qs:[
+   {t:"fill",q:"What is new every morning?",v:"They are new every morning: great is thy ___.",ref:"Lamentations 3:23",o:["faithfulness","mercy","power","love"],a:0,why:"Yesterday’s mistakes don’t use up God’s kindness. Each morning it is new."},
+   {t:"mc",q:"What sign did God give Noah as a promise?",o:["A rainbow","A star","A dove","An olive tree"],a:0,why:"Genesis 9:13: “I do set my bow in the cloud.” God remembers His promises."},
+   {t:"fill",q:"Why can we trust what God says?",v:"God is not a man, that he should ___.",ref:"Numbers 23:19",o:["lie","sleep","fail","change"],a:0,why:"People can break promises. God never does."}]}
+ ]},
+ {title:"Jesus’ Miracles",sub:"Seeing His power and love",lessons:[
+  {id:"wine",name:"Water into Wine",qs:[
+   {t:"mc",q:"Where did Jesus do His first miracle?",o:["At a wedding in Cana","In a synagogue","In the temple","On a boat"],a:0,why:"John 2 tells how Jesus turned water into wine at a wedding feast."},
+   {t:"mc",q:"What did Mary tell the servants?",o:["Whatsoever he saith unto you, do it","Go home","Buy more wine","Ask the governor"],a:0,why:"John 2:5. Great advice for us too: whatever Jesus says, do it."},
+   {t:"fill",q:"How did the disciples respond?",v:"This beginning of miracles did Jesus in Cana of Galilee, and manifested forth his glory; and his disciples ___ on him.",ref:"John 2:11",o:["believed","waited","called","looked"],a:0,why:"Miracles point to who Jesus is, so that we believe in Him."}]},
+  {id:"storm",name:"Calming the Storm",qs:[
+   {t:"mc",q:"Where were the disciples when the storm came?",o:["Crossing the sea in a boat","Climbing a mountain","Praying in the temple","Walking to Jerusalem"],a:0,why:"Mark 4 says a great storm filled the ship with water."},
+   {t:"mc",q:"What was Jesus doing when the storm started?",o:["Sleeping","Preaching","Eating","Walking on water"],a:0,why:"Mark 4:38 says He was asleep on a pillow. He wasn’t worried, because He is Lord of the storm."},
+   {t:"fill",q:"What did Jesus say to the sea?",v:"And he arose, and rebuked the wind, and said unto the sea, Peace, be ___.",ref:"Mark 4:39",o:["still","calm","quiet","gone"],a:0,why:"The wind and the waves obeyed Him. He can bring peace to your storms too."},
+   {t:"build",q:"Build Jesus’ words to the sea.",w:"Peace, be still",x:["loud","storm"],ref:"Mark 4:39",why:"Three words that stopped a storm. Pray them when life feels wild."}]},
+  {id:"feeding",name:"Feeding the 5,000",qs:[
+   {t:"mc",q:"What did a boy have to share?",o:["Five loaves and two fishes","Ten loaves","A basket of fruit","Two loaves and five fishes"],a:0,why:"John 6:9. A small gift in Jesus’ hands fed thousands."},
+   {t:"mc",q:"How many baskets of leftovers were gathered?",o:["Twelve","Three","Seven","None"],a:0,why:"John 6:13. Jesus doesn’t just give enough. He gives more than enough."},
+   {t:"fill",q:"What did Jesus call Himself afterwards?",v:"I am the bread of ___: he that cometh to me shall never hunger.",ref:"John 6:35",o:["life","heaven","God","love"],a:0,why:"Food fills us for a day. Jesus satisfies the hunger of our souls."}]},
+  {id:"lazarus",name:"Lazarus Lives",qs:[
+   {t:"fill",q:"The shortest verse in the Bible shows Jesus’ heart.",v:"Jesus ___.",ref:"John 11:35",o:["wept","prayed","smiled","spoke"],a:0,why:"Jesus cried with His friends. He cares when you are sad."},
+   {t:"mc",q:"How long had Lazarus been in the tomb when Jesus arrived?",o:["Four days","One day","A week","A month"],a:0,why:"John 11:17. Nothing is too late for Jesus."},
+   {t:"fill",q:"What did Jesus tell Martha?",v:"I am the resurrection, and the ___.",ref:"John 11:25",o:["life","way","light","truth"],a:0,why:"Jesus has power over death itself."}]}
+ ]},
+ {title:"Psalms & Worship",sub:"Talking to God with your whole heart",lessons:[
+  {id:"ps23",name:"The Shepherd Psalm",qs:[
+   {t:"fill",q:"Where does the Shepherd lead us?",v:"He maketh me to lie down in green ___: he leadeth me beside the still waters.",ref:"Psalm 23:2",o:["pastures","fields","valleys","gardens"],a:0,why:"God knows when you need rest and leads you to it."},
+   {t:"mc",q:"In Psalm 23:4, why does David fear no evil?",o:["For thou art with me","Because he is strong","Because he has a sword","Because the valley is short"],a:0,why:"Even in the darkest valley, God is right there with you."},
+   {t:"build",q:"Build the start of Psalm 23:3.",w:"He restoreth my soul",x:["mind","takes"],ref:"Psalm 23:3",why:"When you feel empty, God fills you up again."}]},
+  {id:"praise",name:"Praise & Thanks",qs:[
+   {t:"fill",q:"Who should praise the Lord?",v:"Let every thing that hath breath praise the ___. Praise ye the LORD.",ref:"Psalm 150:6",o:["LORD","king","sky","earth"],a:0,why:"The very last verse of the Psalms. If you’re breathing, you have a reason to praise."},
+   {t:"mc",q:"What is worship?",o:["Only singing at church","Honouring God with your words, songs and whole life","Being quiet","Reading only"],a:1,why:"Romans 12:1 calls us to give our whole lives to God. Worship happens on Monday too."},
+   {t:"fill",q:"How do we come into God’s presence?",v:"Enter into his gates with ___, and into his courts with praise.",ref:"Psalm 100:4",o:["thanksgiving","gifts","fear","silence"],a:0,why:"Start your prayers with thank you. It changes your heart."}]},
+  {id:"ps51",name:"A Clean Heart",qs:[
+   {t:"mc",q:"Who wrote Psalm 51 after doing something very wrong?",o:["David","Moses","Solomon","Paul"],a:0,why:"Even a king after God’s own heart needed forgiveness. So do we all."},
+   {t:"fill",q:"What did David ask God for?",v:"Create in me a clean ___, O God; and renew a right spirit within me.",ref:"Psalm 51:10",o:["heart","mind","life","soul"],a:0,why:"God doesn’t just forgive. He makes us new inside."},
+   {t:"mc",q:"What does God do when we are truly sorry?",o:["Forgives and makes us clean","Stays angry forever","Ignores us","Gives up on us"],a:0,why:"Psalm 51:17 says God will not despise a broken and contrite heart."}]},
+  {id:"ps139",name:"Known by God",qs:[
+   {t:"fill",q:"How did God make you?",v:"I will praise thee; for I am fearfully and wonderfully ___.",ref:"Psalm 139:14",o:["made","loved","known","formed"],a:0,why:"You are not an accident. God made you with care."},
+   {t:"mc",q:"Psalm 139:7–10 says there is nowhere you can go where…",o:["God is not with you","God cannot reach you","God is with you","No one sees you"],a:2,why:"On the highest mountain or the deepest sea, His hand still holds you."},
+   {t:"mc",q:"According to Psalm 139:13, when did God know you?",o:["Before you were born","Only after baptism","When you turned 18","When you first prayed"],a:0,why:"“Thou hast covered me in my mother’s womb.” God knew you before anyone else did."}]}
+ ]},
+ {title:"Faith at School",sub:"Following Jesus every day",lessons:[
+  {id:"honesty",name:"Honesty",qs:[
+   {t:"mc",q:"A friend asks to copy your homework. What honours God?",o:["Let them copy","Kindly say no and offer to help them understand it","Tell the whole class","Ignore them"],a:1,why:"Honesty and kindness can go together. Helping them learn is the real gift."},
+   {t:"fill",q:"What does God think of honesty?",v:"Lying lips are abomination to the LORD: but they that deal truly are his ___.",ref:"Proverbs 12:22",o:["delight","friends","servants","children"],a:0,why:"Telling the truth makes God glad."},
+   {t:"fill",q:"How should we speak to others?",v:"Wherefore putting away lying, speak every man ___ with his neighbour.",ref:"Ephesians 4:25",o:["truth","kindly","softly","often"],a:0,why:"Truth builds trust with friends, family and teachers."}]},
+  {id:"friendsfaith",name:"Friends & Peer Pressure",qs:[
+   {t:"fill",q:"Why do our friends matter?",v:"Be not deceived: evil communications corrupt good ___.",ref:"1 Corinthians 15:33",o:["manners","friends","hearts","minds"],a:0,why:"The people around us shape us. Choose friends who help you grow."},
+   {t:"mc",q:"Friends push you to do something wrong. What helps most?",o:["Go along so they like you","Stand firm, walk away and pray for strength","Get angry at them","Keep it secret"],a:1,why:"1 Corinthians 10:13 promises God will make a way to escape."},
+   {t:"fill",q:"What does a true friend do?",v:"A friend loveth at all ___.",ref:"Proverbs 17:17",o:["times","costs","parties","hours"],a:0,why:"Be that kind of friend, in good times and hard ones."}]},
+  {id:"kindness",name:"Kindness & Bullying",qs:[
+   {t:"mc",q:"Someone in your class is being teased. What would Jesus do?",o:["Join in","Stand up for them and be their friend","Film it on your phone","Stay out of it"],a:1,why:"Jesus always made space for the left-out. If it’s serious, tell a teacher or trusted adult too."},
+   {t:"fill",q:"Complete the Golden Rule.",v:"Therefore all things whatsoever ye would that men should do to you, do ye even so to ___.",ref:"Matthew 7:12",o:["them","God","friends","yourselves"],a:0,why:"Treat others the way you’d love to be treated."},
+   {t:"mc",q:"If someone is unkind to you, Jesus says to…",o:["Pay them back","Love your enemies and pray for them","Never speak to them again","Tell everyone"],a:1,why:"Matthew 5:44. It’s hard, but God gives the strength to do it."}]},
+  {id:"hardwork",name:"Working Hard",qs:[
+   {t:"fill",q:"How should we do our schoolwork?",v:"And whatsoever ye do, do it ___, as to the Lord, and not unto men.",ref:"Colossians 3:23",o:["heartily","quickly","perfectly","quietly"],a:0,why:"Your homework can be worship when you do it for God."},
+   {t:"mc",q:"Exams are stressing you out. What does Philippians 4:6 say?",o:["Worry about everything","Pray about everything, with thanksgiving","Give up","Study all night, every night"],a:1,why:"Do your best, then give the worry to God."},
+   {t:"build",q:"Build the start of Philippians 4:13.",w:"I can do all things through Christ",x:["some","alone"],ref:"Philippians 4:13",why:"Not by your own strength, but through Christ who strengthens you."}]}
  ]}
 ];
 
@@ -542,18 +857,25 @@ const BADGES=[
 const KEY="rooted-v1";
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()};
 const yesterday=()=>{const d=new Date();d.setDate(d.getDate()-1);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()};
-let S={xp:0,streak:0,best:0,last:null,hearts:5,heartDay:today(),done:{},saved:[],mood:null,moodIdx:0,tab:"learn",days:{},mem:{},read:{},journal:[],badges:[],pmode:"memory",memSel:0,memRound:0,name:"",goal:30,stage:"",grace:false,sound:true,perfect:0,onboarded:false};
+let S={xp:0,streak:0,best:0,last:null,hearts:5,heartDay:today(),done:{},saved:[],mood:null,moodIdx:0,tab:"learn",days:{},mem:{},read:{},journal:[],badges:[],pmode:"memory",memSel:0,memRound:0,name:"",goal:30,stage:"",grace:false,sound:true,perfect:0,onboarded:false,season:"auto",justGrew:null,stageDates:{},lastStage:0};
 try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 if(S.heartDay!==today()){S.hearts=5;S.heartDay=today()}
 if(S.last&&S.last!==today()&&S.last!==yesterday())S.streak=0;
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
 function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2600)}
-function addXp(n){S.xp+=n;const d=today();S.days[d]=(S.days[d]||0)+n;
+function addXp(n){const prevStage=stageIdx();S.xp+=n;const d=today();S.days[d]=(S.days[d]||0)+n;
  if(S.last!==d){S.streak=(S.last===yesterday()?S.streak:0)+1;S.last=d}
  S.best=Math.max(S.best||0,S.streak);
  const before=S.days[d]-n;if(before<goalN()&&S.days[d]>=goalN())setTimeout(()=>toast("Daily goal reached! Well done."),300);
- checkBadges();save();stats()}
-function checkBadges(){for(const b of BADGES)if(!S.badges.includes(b.id)&&b.ok()){S.badges.push(b.id);setTimeout(()=>toast("Badge earned: "+b.n),900)}}
+ const ns=stageIdx();if(ns>prevStage){S.stageDates[STAGES[ns].n]=new Date().toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});setTimeout(()=>levelUp(prevStage,ns),700)}
+ checkBadges();save();stats();syncSoon()}
+function stageIdx(){let k=0;STAGES.forEach((s,i)=>{if(S.xp>=s.xp)k=i});return k}
+function levelUp(from,to){if(!S.stageDates[STAGES[0].n])S.stageDates[STAGES[0].n]="The day you started";
+ const el=document.getElementById("levelup");const msg=["","Your seed has sprouted! Tiny roots are reaching down.","Look at you grow! Your faith is branching out.","Deeply rooted! Like a tree planted by the rivers of water."][to];
+ el.innerHTML=`<div class="lu-in"><span class="script">Level up!</span><div class="lu-stage"><div class="lu-old">${plant(from)}</div><div class="lu-new">${plant(to)}</div></div>
+  <h2>${STAGES[to].n.toUpperCase()}</h2><p>${msg}</p><p class="lu-verse">\u201cAnd he shall be like a tree planted by the rivers of water, that bringeth forth his fruit in his season.\u201d <b>Psalm 1:3</b></p>
+  <button class="btn wide" id="luClose">Keep growing</button></div>`;
+ el.hidden=false;SND.win();buzz([40,60,40]);setTimeout(()=>confetti(el.querySelector(".lu-new"),34),900);el.querySelector("#luClose").focus()}function checkBadges(){for(const b of BADGES)if(!S.badges.includes(b.id)&&b.ok()){S.badges.push(b.id);setTimeout(()=>toast("Badge earned: "+b.n),900)}}
 function dayKey(off){const d=new Date();d.setDate(d.getDate()-off);return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()}
 function weekStrip(){const L="SMTWTFS";let h="";for(let o=6;o>=0;o--){const d=new Date();d.setDate(d.getDate()-o);const k=dayKey(o);h+=`<span class="${S.days[k]?"on":""} ${o===0?"today":""}"><i>${S.days[k]?ICON_SM:""}</i>${L[d.getDay()]}</span>`}return `<div class="week" aria-label="Last 7 days">${h}</div>`}
 const ICON_SM=`<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>`;
@@ -596,6 +918,30 @@ function buzz(p){try{navigator.vibrate&&navigator.vibrate(p)}catch(e){}}
 function confetti(el,n){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const r=el.getBoundingClientRect();const box=document.createElement("div");box.className="confetti";box.style.left=(r.left+r.width/2)+"px";box.style.top=(r.top+r.height/2)+"px";
  const cols=["#ACC048","#780F0F","#F6F4DF","#5F7020"];for(let k=0;k<(n||16);k++){const i=document.createElement("i");const a=Math.random()*Math.PI*2,d=70+Math.random()*110;i.style.setProperty("--c",cols[k%4]);i.style.setProperty("--dx",Math.cos(a)*d+"px");i.style.setProperty("--dy",(Math.sin(a)*d-40)+"px");i.style.setProperty("--r",(Math.random()*540-270)+"deg");box.appendChild(i)}
  document.body.appendChild(box);setTimeout(()=>box.remove(),1000)}
+function isWide(){return matchMedia("(min-width: 1000px)").matches}
+function mascot(mood,cls){/* Sprout: an original seedling buddy. moods: wave, happy, sad, cheer */
+ const eyes=mood==="sad"?`<path d="M40 58q5 -4 10 0M62 58q5 -4 10 0" stroke-width="3.5"/>`:mood==="cheer"||mood==="happy"?`<path d="M40 60q5 -7 10 0M62 60q5 -7 10 0" stroke-width="3.5"/>`:`<circle cx="45" cy="58" r="4.5" fill="#780F0F" stroke="none"/><circle cx="67" cy="58" r="4.5" fill="#780F0F" stroke="none"/>`;
+ const mouth=mood==="sad"?`<path d="M48 76q8 -7 16 0" stroke-width="3.5"/>`:mood==="cheer"?`<path d="M46 70q10 14 20 0z" fill="#780F0F"/>`:`<path d="M47 71q9 9 18 0" stroke-width="3.5"/>`;
+ const leafL=mood==="sad"?"M56 26c-6 2 -18 8 -24 20c10 0 20-8 24-20z":"M56 26c-4-12-16-18-28-16c2 12 14 18 28 16z";
+ const leafR=mood==="sad"?"M56 26c6 2 18 8 24 20c-10 0-20-8-24-20z":"M56 26c4-12 16-18 28-16c-2 12-14 18-28 16z";
+ const armL=mood==="cheer"?"M24 66q-10-10-8-22":mood==="wave"?"M24 70q-12-6-12-20":"M24 72q-8 4-10 12";
+ const armR=mood==="cheer"?"M88 66q10-10 8-22":"M88 72q8 4 10 12";
+ return `<svg class="sprout ${mood} ${cls||""}" viewBox="0 0 112 112" fill="none" stroke="#780F0F" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+  <path d="M56 38V26" stroke-width="4"/><g class="leaves"><path d="${leafL}" fill="#ACC048" stroke-width="3.5"/><path d="${leafR}" fill="#ACC048" stroke-width="3.5"/></g>
+  <path class="arm-l" d="${armL}" stroke-width="4"/><path d="${armR}" stroke-width="4"/>
+  <path d="M56 38c20 0 34 14 34 34s-14 30-34 30s-34-10-34-30s14-34 34-34z" fill="#F6F4DF" stroke-width="4"/>
+  <ellipse cx="38" cy="72" rx="5" ry="3" fill="#ACC048" stroke="none" opacity=".8"/><ellipse cx="74" cy="72" rx="5" ry="3" fill="#ACC048" stroke="none" opacity=".8"/>
+  ${eyes}${mouth}<path d="M44 102l-4 8M56 102v8M68 102l4 8" stroke-width="3"/></svg>`}
+/* seasons */
+function easterDate(y){const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),mo=Math.floor((h+l-7*m+114)/31),da=((h+l-7*m+114)%31)+1;return new Date(y,mo-1,da)}
+const SEASONS={
+ easter:{id:"easter",label:"Easter",kicker:"He is risen!",v:["He is not here: for he is risen, as he said. Come, see the place where the Lord lay.","Matthew 28:6"]},
+ christmas:{id:"christmas",label:"Christmas",kicker:"Joy to the world!",v:["For unto you is born this day in the city of David a Saviour, which is Christ the Lord.","Luke 2:11"]}};
+function currentSeason(){const pick=S.season||"auto";if(pick==="off")return null;if(pick!=="auto")return SEASONS[pick];
+ const now=new Date(),y=now.getFullYear(),e=easterDate(y);const diff=(now-e)/864e5;
+ if(diff>=-7&&diff<=7)return SEASONS.easter;
+ const m=now.getMonth(),d=now.getDate();if((m===11&&d>=1)||(m===0&&d<=6))return SEASONS.christmas;return null}
+let SEASON=null;
 function greet(){const h=new Date().getHours();return h<12?"Good morning":h<17?"Good afternoon":"Good evening"}
 
 /* ---------- views ---------- */
@@ -608,39 +954,104 @@ const DAILY=[
 function dailyItem(){const d=new Date();const doy=Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);return DAILY[doy%DAILY.length]}
 function dailyVerse(){return dailyItem().v}
 
+function pathSVG(nodes){/* hand-drawn tapered roots between lesson discs, with branching rootlets and root hairs */
+ const GAP=72,step=84+GAP,top=48;const vw=($("#view")&&$("#view").clientWidth)||Math.min(innerWidth,560);const MAXX=Math.max(120,vw/2-14);let seed=nodes.length*131+17;const r=()=>(seed=(seed*9301+49297)%233280)/233280;
+ const f=n=>n.toFixed(1);
+ const bez=(p0,p1,p2,p3,t)=>{const u=1-t;return [u*u*u*p0[0]+3*u*u*t*p1[0]+3*u*t*t*p2[0]+t*t*t*p3[0],u*u*u*p0[1]+3*u*u*t*p1[1]+3*u*t*t*p2[1]+t*t*t*p3[1]]};
+ const curve=(p0,p1,p2,p3,n)=>{const o=[];for(let i=0;i<=n;i++)o.push(bez(p0,p1,p2,p3,i/n));return o};
+ /* a tapered, slightly knobbly ribbon along pts: w0 at the start, w1 at the tip */
+ const taper=(pts,w0,w1,wob)=>{const L=[],R=[];for(let i=0;i<pts.length;i++){const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)];let dx=b[0]-a[0],dy=b[1]-a[1];const m=Math.hypot(dx,dy)||1;dx/=m;dy/=m;
+   const t=i/(pts.length-1);const w=(w0+(w1-w0)*Math.pow(t,.8))*(1+(wob||0)*Math.sin(i*1.9+seed%7))/2;L.push([pts[i][0]-dy*w,pts[i][1]+dx*w]);R.push([pts[i][0]+dy*w,pts[i][1]-dx*w])}
+  const tip=pts[pts.length-1];const tw=Math.max(.01,w1/2);return "M"+L.map(p=>f(p[0])+" "+f(p[1])).join("L")+"L"+f(tip[0])+" "+f(tip[1])+"L"+R.reverse().map(p=>f(p[0])+" "+f(p[1])).join("L")+"Z"};
+ const line=pts=>"M"+pts.map(p=>f(p[0])+" "+f(p[1])).join("L");
+ /* one rootlet: curls outward and down, forks once, with fine hairs */
+ /* a branching root system like a botanical drawing: each root wanders, tapers,
+    and splits into smaller roots, which split again into fine twigs */
+ const rootlet=(x,y,dir,len,drop,w,blocked)=>{let out="";
+  const grow=(x,y,ang,len,w,depth)=>{const n=Math.max(4,Math.round(len/6)),seg=len/n,pts=[[x,y]];let a=ang,cx=x,cy=y;
+   for(let i=0;i<n;i++){a+=(r()-.5)*22;a+=(90-a)*.075;a=Math.max(-12,Math.min(168,a));const rad=a*Math.PI/180;const nx=cx+Math.cos(rad)*seg,ny=cy+Math.sin(rad)*seg;
+    if(blocked(nx,ny)||Math.abs(nx)>MAXX)break;cx=nx;cy=ny;pts.push([cx,cy])}
+   if(pts.length<2)return;const wEnd=Math.max(.7,w*.28);out+=`<path class="d${Math.min(depth,3)}" d="${taper(pts,w,wEnd,.06)}"/>`;
+   if(depth<=0||w<1.4)return;
+   const kids=depth>=2?3:2;for(let k=0;k<kids;k++){const at=Math.min(pts.length-2,Math.max(1,Math.round(pts.length*(.28+k*.24+r()*.1))));const p=pts[at];
+    const t=at/(pts.length-1),wHere=w+(wEnd-w)*t;const side=(k%2?1:-1)*(r()>.25?1:-1);const ca=ang+side*(28+r()*26);
+    grow(p[0],p[1],ca,len*(.42+r()*.2),Math.max(1,wHere*.62),depth-1)}
+   /* a few tiny twigs near the tip */
+   for(let k=0;k<2;k++){const at=Math.max(1,pts.length-2-k*2);const p=pts[at];grow(p[0],p[1],ang+(k?1:-1)*(35+r()*20),6+r()*7,Math.max(.8,wEnd*1.2),0)}};
+  const ang0=dir>0?(18+drop*.7):(162-drop*.7);grow(x,y,ang0,len,w,3);return {out,buds:""}};
+ let base="",grown="",fresh="",lets="",letsOn="",hairs="",hairsOn="",bark="",barkFresh="";
+ for(let i=1;i<nodes.length;i++){const a=nodes[i-1],b=nodes[i];const y0=top+(i-1)*step,y1=top+i*step,x0=a.off,x1=b.off;
+  const P=[[x0,y0],[x0,y0+step*.55],[x1,y1-step*.55],[x1,y1]];const reached=b.st!=="locked";
+  const pts=curve(...P,26);
+  if(reached){const sh=taper(pts,13,12,.04);const bk=line(pts.map((p,j)=>[p[0]+1.6*Math.sin(j*.45),p[1]]));if(b.fresh){fresh+=sh;barkFresh+=bk}else{grown+=sh;bark+=bk}}
+  else base+=`M${x0} ${y0}C${x0} ${f(y0+step*.55)} ${x1} ${f(y1-step*.55)} ${x1} ${y1}`;
+  /* rootlets sit in the gap between discs, on the outer side, so they never reach the lesson names */
+  const mid=bez(...P,.5),mx=mid[0],my=mid[1];const outer=Math.abs(mx)<14?(r()>.5?1:-1):Math.sign(mx);
+  const A1=bez(...P,.22),A2=bez(...P,.36);
+  const fit=(x0,dir,want)=>Math.max(30,Math.min(want,MAXX-dir*x0));
+  /* keep clear of the next lesson's name and don't reach past its row */
+  const lblL=b.off>0?b.off-52-136:b.off+52,lblR=b.off>0?b.off-52:b.off+52+136;
+  const blocked=(x,y)=>y>y1+34||(y>y1-30&&x>lblL-6&&x<lblR+6)||(y>y1-58&&Math.abs(x-x1)<52);
+  const R1=rootlet(A1[0]+outer*3,A1[1],outer,fit(A1[0],outer,130+r()*30),26+r()*10,9,blocked);
+  const R2=rootlet(A2[0]-outer*3,A2[1],-outer,fit(A2[0],-outer,96+r()*26),32+r()*10,7,blocked);
+  if(reached){letsOn+=`<g class="${b.fresh?"rl-fresh":""}">${R1.out}${R2.out}${R1.buds}${R2.buds}</g>`}else{lets+=R1.out+R2.out+R1.buds+R2.buds}}
+ /* the root keeps going a little past the last lesson, fading out */
+ const last=nodes[nodes.length-1],ly=top+(nodes.length-1)*step,lx=last.off;const tipPts=curve([lx,ly],[lx,ly+40],[lx+(lx>0?-10:10),ly+55],[lx+(lx>0?-14:14),ly+80],14);
+ const allDone=last.st==="done";
+ const h=top+(nodes.length-1)*step+96;
+ return `<svg class="rootpath" style="height:${h}px" aria-hidden="true"><path class="rp-base" d="${base}"/><g class="rl-off">${lets}</g><path class="rh-off" d="${hairs}"/>
+  <path class="rp-tip ${allDone?"on":""}" d="${taper(tipPts,9,4,.05)}"/><circle class="rp-tip ${allDone?"on":""}" cx="${f(tipPts[tipPts.length-1][0])}" cy="${f(tipPts[tipPts.length-1][1])}" r="2"/>
+  <g class="rl-on">${letsOn}</g><path class="rh-on" d="${hairsOn}"/>
+  <path class="rp-grown" d="${grown}"/><path class="rp-bark" d="${bark}"/>
+  ${fresh?`<g class="rp-fresh"><path class="rp-grown" d="${fresh}"/><path class="rp-bark" d="${barkFresh}"/></g>`:""}</svg>`}
+function learnSay(cur){const g=S.days[today()]||0,nm=S.name?", "+esc(S.name):"";
+ if(cur===-1)return `You finished every lesson${nm}! I’m so proud of you.`;
+ if(g>=goalN())return `Goal reached today${nm}. Your roots are growing deep!`;
+ if(S.streak>=3)return `${S.streak} days in a row${nm}! Let’s keep it going.`;
+ if(!Object.keys(S.done).length)return `Hi${nm}! I’m Sprout. Tap Start and we’ll grow together.`;
+ return `Ready for today’s lesson${nm}?`}
 function viewLearn(){
  const L=allLessons();const cur=L.findIndex(l=>!S.done[l.id]);const dv=dailyVerse();
- const offs=[0,56,76,56,0,-56,-76,-56];let k=0,gi=0;
+ const offs=[0,56,76,56,0,-56,-76,-56];let k=0,gi=0;const fresh=S.justGrew;S.justGrew=null;
  let units=UNITS.map((u,ui)=>{
-  const doneN=u.lessons.filter(l=>S.done[l.id]).length;
+  const doneN=u.lessons.filter(l=>S.done[l.id]).length;const meta=[];
   const nodes=u.lessons.map(l=>{const i=gi++;const off=offs[k++%offs.length];
-   const st=S.done[l.id]?"done":i===cur?"current":"locked";
+   const st=S.done[l.id]?"done":i===cur?"current":"locked";meta.push({off,st,fresh:fresh&&i>0&&L[i-1].id===fresh});
    const side=off>0?"right":"left";
    const inner=st==="done"?ICON.check:st==="current"?ICON.star:ICON.lock;
    return `<button class="node ${st} ${side}" style="transform:translateX(${off}px)" data-lesson="${l.id}" ${st==="locked"?'aria-disabled="true"':""} aria-label="${esc(l.name)}${st==="locked"?" (locked)":""}">
      ${st==="current"?'<span class="tag">Start</span>':""}<span class="disc">${inner}</span><span class="name">${esc(l.name)}</span></button>`}).join("");
-  return `<section class="unit"><div class="unit-banner tex"><div><small>Unit ${ui+1}</small><h3>${esc(u.title)}</h3><small>${esc(u.sub)}</small></div><span class="count">${doneN}/${u.lessons.length}</span></div><div class="path">${nodes}</div></section>`}).join("");
+  return `<section class="unit"><div class="unit-banner tex"><div><small>Unit ${ui+1}</small><h3>${esc(u.title)}</h3><small>${esc(u.sub)}</small></div><span class="count">${doneN}/${u.lessons.length}</span></div><div class="path">${pathSVG(meta)}${nodes}</div></section>`}).join("");
  const allDone=cur===-1;
- return `
- <section class="hero tex">
-  <span class="kicker">${S.name?`${greet()}, ${esc(S.name)}!`:"Grow in Him!"}</span>
+ const hero=`<section class="hero tex">
+  <div class="season-fx" aria-hidden="true"></div>
+  <span class="kicker">${SEASON?SEASON.kicker:(S.name?`${greet()}, ${esc(S.name)}!`:"Grow in Him!")}</span>
   <div class="title-wrap" id="titleWrap" tabindex="0" role="button" aria-label="Show the Roots drawing"><div class="roots-logo" aria-hidden="true"></div><h1>ROOT<br>ED</h1></div>
   <div class="hero-foot">
    <div class="hero-copy"><p class="hint">Tap or hover the name</p><p>${S.stage==="new"?"Welcome to the family! Start with who Jesus is.":S.stage==="returning"?"Welcome home. God is glad you are here.":S.stage==="growing"?"Keep growing, one day at a time.":"Bite-size Bible lessons for new believers, one day at a time."}</p></div>
    <div class="burst">${burst("#ACC048","#780F0F")}<span><b>${S.streak}</b>day streak</span></div>
   </div>
  </section>
- ${(()=>{const nl=cur===-1?L[0]:L[cur];const ui=UNITS.findIndex(u=>u.lessons.includes(nl));
+`;
+ const cont=` ${(()=>{const nl=cur===-1?L[0]:L[cur];const ui=UNITS.findIndex(u=>u.lessons.includes(nl));
   return `<button class="btn wide cont" data-lesson="${nl.id}"><span><small>${cur===-1?"Review":"Continue"} · Unit ${ui+1}</small><b>${esc(nl.name)}</b></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>`})()}
- <section class="daily tex"><figure class="daily-img"><img src="${dailyItem().img}" alt="${esc(dailyItem().alt)}" style="object-position:${dailyItem().pos}" decoding="async"><figcaption><span class="label">Verse of the day</span><blockquote>${esc(dv[0])}</blockquote><cite>${esc(dv[1])} KJV</cite></figcaption></figure>
+`;
+ const season=SEASON?`<section class="season-card tex"><span class="label">${SEASON.label}</span><blockquote>${esc(SEASON.v[0])}</blockquote><cite>${esc(SEASON.v[1])} KJV</cite></section>`:"";
+ const daily=` <section class="daily tex"><figure class="daily-img"><img src="${dailyItem().img}" alt="${esc(dailyItem().alt)}" style="object-position:${dailyItem().pos}" decoding="async"><figcaption><span class="label">Verse of the day</span><blockquote>${esc(dv[0])}</blockquote><cite>${esc(dv[1])} KJV</cite></figcaption></figure>
   <div class="row"><button class="btn ghost" data-share="${esc(dv[1])}">Make a share card</button><button class="btn ghost" data-copy="${esc(dv[1])}">Copy verse</button></div></section>
- ${(()=>{const g=S.days[today()]||0;const pct=Math.min(1,g/goalN());const C=2*Math.PI*26;
+`;
+ const goal=` ${(()=>{const g=S.days[today()]||0;const pct=Math.min(1,g/goalN());const C=2*Math.PI*26;
   return `<section class="goal tex"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" fill="none" stroke="var(--line)" stroke-width="8"/><circle cx="32" cy="32" r="26" fill="none" stroke="var(--pink)" stroke-width="8" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-family="Bowlby One,sans-serif" font-size="14" fill="currentColor">${Math.round(pct*100)}%</text></svg>
   <div><span class="label">Daily goal</span><h3>${g>=goalN()?"Goal reached!":`${g} / ${goalN()} seeds`}</h3><p>${g>=goalN()?"Come back tomorrow to grow your streak.":"Finish a lesson, memorise a verse or read a chapter."}</p>${weekStrip()}</div></section>`})()}
- <div class="divider" aria-hidden="true"></div>
- <div class="shead"><h2>Your path</h2><span class="script">${allDone?"All done!":"Keep going"}</span></div>
+`;
+ const buddy=`<div class="buddy">${mascot(cur===-1||(S.days[today()]||0)>=goalN()?"cheer":"wave")}<p class="bubble">${learnSay(cur)}</p></div>`;
+ const rest=` <div class="divider" aria-hidden="true"></div>
+BUDDYMARK <div class="shead"><h2>Your path</h2><span class="script">${allDone?"All done!":"Keep going"}</span></div>
  ${units}
- ${allDone?'<div class="empty">You finished every lesson. Replay any lesson to review, and new units will grow here.</div>':""}`}
+ ${allDone?'<div class="empty">You finished every lesson. Replay any lesson to review, and new units will grow here.</div>':""}`.replace("BUDDYMARK","");
+ const path=rest.replace(' <div class="shead">',buddy+' <div class="shead">');
+ if(isWide())return `<div class="learn-grid"><div class="col-main">${hero}${cont}${askCard()}${path}</div><aside class="col-side">${season}${daily}${goal}</aside></div>`;
+ return hero+cont+askCard()+season+daily+goal+path}
 
 function viewFeel(){
  const m=MOODS.find(x=>x.id===S.mood);
@@ -653,19 +1064,24 @@ function viewFeel(){
    <div class="row"><button class="btn" id="another">Another verse</button><button class="btn ghost" id="saveV">${isSaved?"Saved":"Save verse"}</button><button class="btn ghost" data-share="${esc(v[1])}">Share</button></div></article>`}
  return `<div class="shead"><h2 class="soft">How are you feeling?</h2><span class="script">Be honest</span></div>
  <div class="moods">${chips}</div>${card}
+ <button class="btn ghost wide" data-openask="1">Have a question about God? Ask Rooted</button>
  <div class="divider" aria-hidden="true"></div>
  <div class="shead"><h2 class="soft">Prayer journal</h2><span class="script">Talk to Him</span></div>
  <div class="journal"><label class="label" for="journalText">${m?`Write a prayer about feeling ${esc(m.label.toLowerCase())}`:"Write a prayer"}</label>
   <textarea id="journalText" placeholder="Dear God, today I…"></textarea>
   <div class="row"><button class="btn" id="saveJ">Save prayer</button></div>
-  ${S.journal.length?S.journal.slice(0,6).map((j,i)=>`<article class="entry"><header><span>${esc(j.d)}${j.m?" \u00b7 "+esc(j.m):""}</span><button class="x" data-unj="${i}" aria-label="Delete prayer">Delete</button></header><p>${esc(j.t)}</p></article>`).join(""):'<div class="empty">Your saved prayers will appear here. Looking back at them later shows how God has answered.</div>'}
+  ${(()=>{const waiting=S.journal.map((j,i)=>[j,i]).filter(([j])=>!j.a),answered=S.journal.map((j,i)=>[j,i]).filter(([j])=>j.a);
+   if(!S.journal.length)return '<div class="empty">Your saved prayers will appear here. When God answers one, mark it answered and it moves to your answered list.</div>';
+   const card=([j,i])=>`<article class="entry ${j.a?"answered":""}"><header><span>${esc(j.d)}${j.m?" · "+esc(j.m):""}</span><span class="row" style="gap:4px">${j.a?"":`<button class="x ans" data-ans="${i}">Mark answered</button>`}<button class="x" data-unj="${i}" aria-label="Delete prayer">Delete</button></span></header><p>${esc(j.t)}</p>${j.a?`<span class="ans-tag">Answered ${esc(j.a)}</span>`:""}</article>`;
+   return `${waiting.length?`<span class="label">Waiting on God · ${waiting.length}</span>${waiting.slice(0,8).map(card).join("")}`:""}
+   ${answered.length?`<div class="ans-head"><span class="script">Answered prayers</span><b>${answered.length}</b></div>${answered.map(card).join("")}`:""}`})()}
  </div>`}
 
 function viewJourney(){
  const st=stage();const idx=STAGES.indexOf(st);const next=STAGES[idx+1];
  const pct=next?Math.round((S.xp-st.xp)/(next.xp-st.xp)*100):100;
  const doneN=Object.keys(S.done).length;
- const saved=S.saved.length?S.saved.map((s,i)=>`<div class="saved-item"><p>${esc(s[0])}<cite>${esc(s[1])}</cite></p><button class="x" data-unsave="${i}" aria-label="Remove ${esc(s[1])}">Remove</button></div>`).join(""):`<div class="empty">Verses you save from Feelings will live here, ready to reread.</div>`;
+ const saved=S.saved.length?`<div class="wall">${S.saved.map((s,i)=>`<div class="vcard v${i%4}" style="--tilt:${[-2,1.5,-1,2.2][i%4]}deg"><span class="pin" aria-hidden="true"></span><p>${esc(s[0])}</p><cite>${esc(s[1])}</cite><div class="row"><button class="x" data-share="${esc(s[1])}">Share</button><button class="x" data-unsave="${i}" aria-label="Remove ${esc(s[1])}">Remove</button></div></div>`).join("")}</div>`:`<div class="empty">Verses you save from Feelings will live here, ready to reread.</div>`;
  return `<section class="poster" aria-label="Promise of the week: Jesus walks beside me every day">
   <svg class="spark" style="left:6px;top:40px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z"/></svg>
   <svg class="spark s2" style="right:10px;top:48%;width:18px;height:18px" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 0c1 7 5 11 12 12-7 1-11 5-12 12-1-7-5-11-12-12 7-1 11-5 12-12z"/></svg>
@@ -692,7 +1108,9 @@ function viewJourney(){
  <div class="divider" aria-hidden="true"></div>
  <div class="shead"><h2>Badges</h2><span class="script">${S.badges.length}/${BADGES.length}</span></div>
  <div class="badges">${BADGES.map(b=>{const on=S.badges.includes(b.id);return `<div class="badge ${on?"":"off"}"><div class="medal">${burst("#ACC048","#780F0F")}<b>${b.ico}</b></div>${esc(b.n)}</div>`}).join("")}</div>
- <div class="shead"><h2>Saved verses</h2></div><div class="saved">${saved}</div>
+ <div class="shead"><h2>Sprout\u2019s growth diary</h2><span class="script">Your story</span></div>
+ <div class="diary">${STAGES.map((s,i)=>{const d=i===0?(S.stageDates[s.n]||"The day you started"):S.stageDates[s.n];const on=i<=idx;return `<div class="dpage ${on?"on":""}">${plant(i)}<b>${s.n}</b><span>${on?esc(d||"Reached"):`${s.xp} seeds`}</span></div>`}).join("")}</div>
+ <div class="shead"><h2>Favorite verses</h2><span class="script">My wall</span></div><div class="saved">${saved}</div>
  <div class="divider" aria-hidden="true"></div>
  <div class="shead"><h2>Settings</h2></div>
  <div class="settings">
@@ -700,6 +1118,7 @@ function viewJourney(){
   <div class="set-row"><div><b>Daily goal</b><span>Seeds to earn each day</span></div><div class="mini-seg">${[10,30,50].map(g=>`<button data-goal="${g}" aria-pressed="${S.goal===g}">${g}</button>`).join("")}</div></div>
   <div class="set-row"><div><b>Grace mode</b><span>Keep learning without losing hearts</span></div><button class="switch" role="switch" id="setGrace" aria-checked="${!!S.grace}" aria-label="Grace mode"></button></div>
   <div class="set-row"><div><b>Sounds and vibration</b><span>Chimes for right and wrong answers</span></div><button class="switch" role="switch" id="setSound" aria-checked="${!!S.sound}" aria-label="Sounds"></button></div>
+  <div class="set-row"><div><b>Seasonal theme</b><span>Easter and Christmas looks. Auto turns them on at the right time.</span></div><div class="mini-seg">${[["auto","Auto"],["easter","Easter"],["christmas","Christmas"],["off","Off"]].map(([k,t])=>`<button data-seasonpick="${k}" aria-pressed="${(S.season||"auto")===k}">${t}</button>`).join("")}</div></div>
   <button class="btn ghost" id="redoIntro">Replay the welcome</button>
  </div>`}
 
@@ -721,7 +1140,67 @@ function viewPractice(){
   <div class="row"><button class="btn" id="memHarder" ${r>=3?"disabled":""}>Hide more words</button><button class="btn ghost" id="memReset">Start over</button></div>
   <button class="btn wide" id="memDone">${known?"Memorised! Practise again anytime":"I can say it by heart (+10 seeds)"}</button></article>`}
 let memRevealed=new Set();
-function render(){stats();const v={learn:viewLearn,feel:viewFeel,practice:viewPractice,journey:viewJourney}[S.tab]();$("#view").innerHTML=v;
+/* ================= friends (shared, via the page's database) ================= */
+const NET={db:null,uid:null,ready:false,tried:false,profiles:[],cheers:[],err:"",sessions:[],testis:[],subG:null,unsubs:[]};
+function weekKey(d){d=d||new Date();const t=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));const day=t.getUTCDay()||7;t.setUTCDate(t.getUTCDate()+4-day);const y=t.getUTCFullYear();const w=Math.ceil(((t-Date.UTC(y,0,1))/864e5+1)/7);return y+"-W"+w}
+function weekSeeds(){let n=0;for(let o=0;o<7;o++){const d=new Date();d.setDate(d.getDate()-o);if(weekKey(d)!==weekKey())break;n+=S.days[dayKey(o)]||0}return n}
+function codeFor(id){let h=0;for(const c of id)h=(h*31+c.charCodeAt(0))>>>0;const A="ABCDEFGHJKMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<6;i++){s+=A[h%A.length];h=Math.floor(h/A.length)+(i+1)*7919}return s}
+const slug=t=>String(t||"").toLowerCase().trim().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,32);
+async function initNet(){if(NET.tried)return;NET.tried=true;
+ try{if(!window.claude||!window.claude.use){NET.err="offline";return}
+  const [db,user]=await Promise.all([claude.use("db"),claude.use("user")]);
+  if(!db||!user){NET.err="offline";if(S.tab==="friends")render();return}
+  const uid=await user.id();if(!uid){NET.err="signedout";if(S.tab==="friends")render();return}
+  NET.db=db;NET.uid=uid;NET.ready=true;if(S.tab==="friends")softRender();
+  db.collection("profiles").onSnapshot(q=>{const n=q.docs.map(d=>({id:d.id,...d.data()}));if(JSON.stringify(n)===JSON.stringify(NET.profiles))return;NET.profiles=n;if(S.tab==="friends")softRender()},()=>{});
+  db.collection("cheers").onSnapshot(q=>{const n=q.docs.map(d=>({id:d.id,...d.data()}));if(JSON.stringify(n)===JSON.stringify(NET.cheers))return;NET.cheers=n;if(S.tab==="friends")softRender()},()=>{});
+  subGroup();syncNow()}catch(e){NET.err="offline"}}
+/* re-render live data without wiping what the viewer is typing */
+function softRender(){const vw=$("#view");const vals={};vw.querySelectorAll("input[id],textarea[id]").forEach(el=>vals[el.id]=el.value);
+ const a=document.activeElement;const fid=a&&vw.contains(a)&&a.id?a.id:null;let ss=null,se=null;try{if(fid){ss=a.selectionStart;se=a.selectionEnd}}catch(e){}
+ render();
+ for(const id in vals){const el=document.getElementById(id);if(el&&el.type!=="checkbox")el.value=vals[id]}
+ if(fid){const el=document.getElementById(fid);if(el){el.focus();try{if(ss!=null)el.setSelectionRange(ss,se)}catch(e){}}}}
+let syncT=null,lastSync="";
+function syncSoon(){clearTimeout(syncT);syncT=setTimeout(syncNow,1500)}
+async function syncNow(){if(!NET.ready)return;
+ const body={name:(S.name||"Friend").slice(0,24),code:codeFor(NET.uid),streak:S.last===today()||S.last===yesterday()?S.streak:0,best:S.best||0,weekKey:weekKey(),weekSeeds:weekSeeds(),group:S.group||"",friends:(S.friends||[]).slice(0,50),stage:stage().n};
+ const j=JSON.stringify(body);if(j===lastSync)return;
+ try{await NET.db.doc("profiles/"+NET.uid).set(body);lastSync=j}catch(e){if(e&&e.code==="invalid_argument"){NET.err="readonly";if(S.tab==="friends")render()}}}
+function myCheers(){const mine=NET.cheers.find(c=>c.id===NET.uid);return (mine&&mine.sent)||{}}
+function prayedForMe(){const wk=weekKey();return NET.cheers.filter(c=>c.id!==NET.uid&&c.sent&&c.sent[NET.uid]&&c.sent[NET.uid].wk===wk).map(c=>c.id)}
+function nameOf(id){const p=NET.profiles.find(x=>x.id===id);return p?p.name:"A friend"}
+function viewFriends(){initNet();
+ const head=`<div class="shead"><h2>Faith with friends</h2><span class="script">Better together</span></div>`;
+ if(!NET.ready){const msg=NET.err==="offline"?`Friends need the online version of Rooted, opened from its claude.ai link. In the copy on your laptop or GitHub, this part needs its own server to share streaks between phones.`:NET.err==="signedout"?"Sign in to claude.ai to add prayer partners and join a group.":"Connecting\u2026";
+  return head+`<div class="buddy">${mascot("wave")}<p class="bubble">${msg}</p></div>`}
+ const me=codeFor(NET.uid);const wk=weekKey();const sent=myCheers();const fr=(S.friends||[]);
+ const partners=fr.map(id=>NET.profiles.find(p=>p.id===id)||{id,name:"Waiting for them to open Rooted",pending:true});
+ const who=prayedForMe();
+ const partnerRows=partners.length?partners.map(p=>{const sentToday=sent[p.id]&&sent[p.id].day===today();const prayed=who.includes(p.id);const ws=p.weekKey===wk?(p.weekSeeds||0):0;
+  return `<div class="pal"><div class="av" aria-hidden="true">${esc((p.name||"?")[0].toUpperCase())}</div><div class="pal-main"><b>${esc(p.name)}</b><span>${p.pending?"Code added":`${p.streak||0}-day streak \u00b7 ${ws} seeds this week`}${prayed?' \u00b7 <em>prayed for you</em>':""}</span></div>
+   <button class="btn ${sentToday?"ghost":""} pray" data-pray="${p.id}" ${sentToday||p.pending?"disabled":""}>${sentToday?"Prayed today":"Pray for"}</button><button class="x" data-unfriend="${p.id}" aria-label="Remove ${esc(p.name)}">Remove</button></div>`}).join(""):`<div class="empty">No prayer partners yet. Share your code with a friend, or add theirs below.</div>`;
+ const grp=S.group||"";
+ let board="";
+ if(grp){const rows=NET.profiles.filter(p=>p.group===grp).map(p=>({...p,ws:p.weekKey===wk?(p.weekSeeds||0):0})).sort((a,b)=>b.ws-a.ws).slice(0,12);
+  const max=Math.max(1,...rows.map(r=>r.ws));
+  board=rows.length?rows.map((r,i)=>`<li class="${r.id===NET.uid?"me":""}"><span class="rank">${i+1}</span><span class="nm">${esc(r.name)}${r.id===NET.uid?" (you)":""}</span><span class="bar"><i style="width:${Math.max(4,r.ws/max*100)}%"></i></span><b>${r.ws}</b></li>`).join(""):`<li class="empty-li">No one here yet. Invite your group to join "${esc(grp)}".</li>`}
+ return head+`
+ ${who.length?`<div class="buddy">${mascot("cheer")}<p class="bubble">${who.length===1?`${esc(nameOf(who[0]))} prayed for you this week.`:`${who.length} friends prayed for you this week.`} You are not alone!</p></div>`:""}
+ <section class="mycode tex"><div><span class="label">Your friend code</span><b class="code">${me}</b><p>Share it so a friend can add you as a prayer partner.</p></div><button class="btn" data-copycode="${me}">Copy code</button></section>
+ <div class="shead"><h2 class="soft">Prayer partners</h2></div>
+ <button class="btn wide" data-ask="friend">+ Add a prayer partner</button>
+ <div class="pals">${partnerRows}</div>
+ <div class="divider" aria-hidden="true"></div>
+ <div class="shead"><h2 class="soft">Group this week</h2><span class="script">${grp?esc(grp):"Youth, class or church"}</span></div>
+ <div class="row"><button class="btn" data-ask="group">${grp?"Change group":"Join a group"}</button>${grp?'<button class="btn ghost" id="leaveGroup">Leave</button>':""}</div>
+ ${grp?`<ol class="board">${board}</ol><p class="fine">Seeds earned since Monday. Everyone in the group can see names and seeds. The goal is growing together, not winning.</p>`:`<p class="fine">Everyone who types the same group name joins the same board. Only names, streaks and weekly seeds are shared, never your prayers.</p>`}
+ ${studySection(grp)}
+ ${NET.err==="readonly"?`<p class="fine">You can view this page but not save to it. Ask the owner to share Rooted with you as a Contributor.</p>`:""}`}
+let lastTab=null;const TABS=["learn","feel","practice","friends","journey"];
+function render(){SEASON=currentSeason();document.documentElement.dataset.season=SEASON?SEASON.id:"";document.body.classList.toggle("wide",isWide());stats();const v={learn:viewLearn,feel:viewFeel,practice:viewPractice,friends:viewFriends,journey:viewJourney}[S.tab]();const vw=$("#view");vw.innerHTML=v;
+ if(lastTab&&lastTab!==S.tab&&!matchMedia("(prefers-reduced-motion: reduce)").matches){vw.classList.remove("in-l","in-r");void vw.offsetWidth;vw.classList.add(TABS.indexOf(S.tab)>TABS.indexOf(lastTab)?"in-r":"in-l")}
+ lastTab=S.tab;
  document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.tab===S.tab))}
 
 /* ---------- events ---------- */
@@ -734,6 +1213,22 @@ $("#view").addEventListener("click",e=>{
  if(e.target.id==="saveV"){const md=MOODS.find(x=>x.id===S.mood);const v=md.vs[S.moodIdx%md.vs.length];if(!S.saved.some(s=>s[1]===v[1]))S.saved.unshift(v);save();render();return}
  const sh=e.target.closest("[data-share]");if(sh){openShare(sh.dataset.share);return}
  const cp=e.target.closest("[data-copy]");if(cp){copyVerse(cp.dataset.copy);return}
+ const cc=e.target.closest("[data-copycode]");if(cc){const c=cc.dataset.copycode;try{navigator.clipboard.writeText(c).then(()=>toast("Code copied"),()=>fallbackCopy(c))}catch(_){fallbackCopy(c)}return}
+ if(e.target.closest("[data-openask]")){openAskRooted();return}
+ const ak=e.target.closest("[data-ask]");if(ak){openAsk(ak.dataset.ask);return}
+ if(e.target.closest("[data-plan]")){openPlan();return}
+ if(e.target.closest("[data-testify]")){openTestify();return}
+ const os=e.target.closest("[data-opensess]");if(os){openSession(os.dataset.opensess);return}
+ const gv=e.target.closest("[data-going]");if(gv){toggleGoing(gv.dataset.going);return}
+ const am=e.target.closest("[data-amen]");if(am){toggleAmen(am.dataset.amen);return}
+ const ut=e.target.closest("[data-untesti]");if(ut){NET.db.doc("testimonies/"+ut.dataset.untesti).delete().catch(()=>toast("Could not delete. Try again."));return}
+ const uf=e.target.closest("[data-unfriend]");if(uf){S.friends=(S.friends||[]).filter(x=>x!==uf.dataset.unfriend);save();syncNow();render();return}
+ const pr=e.target.closest("[data-pray]");if(pr&&NET.ready){const id=pr.dataset.pray;const sent={...myCheers()};sent[id]={day:today(),wk:weekKey()};
+  for(const k in sent)if(sent[k].wk!==weekKey())delete sent[k];
+  NET.db.doc("cheers/"+NET.uid).set({sent}).then(()=>{toast(`${nameOf(id)} will see you prayed for them`);SND.ok();},er=>toast(er&&er.code==="invalid_argument"?"You can view Rooted but not save here":"Could not send. Try again."));
+  confetti(pr,10);pr.disabled=true;pr.textContent="Prayed today";return}
+ if(e.target.id==="leaveGroup"){S.group="";save();syncNow();subGroup();render();return}
+ const se=e.target.closest("button[data-seasonpick]");if(se){S.season=se.dataset.seasonpick;save();render();toast(S.season==="off"?"Seasonal themes off":S.season==="auto"?"Seasonal themes on auto":"Previewing "+SEASONS[S.season].label);return}
  const gl=e.target.closest("[data-goal]");if(gl){S.goal=+gl.dataset.goal;save();render();toast(`Daily goal set to ${S.goal} seeds`);return}
  if(e.target.id==="setGrace"){S.grace=!S.grace;if(S.grace)S.hearts=5;save();render();toast(S.grace?"Grace mode on. No hearts lost.":"Grace mode off");return}
  if(e.target.id==="setSound"){S.sound=!S.sound;save();render();SND.tap();return}
@@ -747,12 +1242,14 @@ $("#view").addEventListener("click",e=>{
  if(e.target.id==="memDone"){const ref=MEMORY[S.memSel%MEMORY.length][0];if(!S.mem[ref]){S.mem[ref]=true;addXp(10);toast("Verse memorised! +10 seeds")}else toast("Keep it fresh by practising often");S.memRound=0;memRevealed=new Set();save();render();return}
  if(e.target.id==="saveJ"){const t=document.getElementById("journalText").value.trim();if(!t){document.getElementById("journalText").focus();return}const md=MOODS.find(x=>x.id===S.mood);
   S.journal.unshift({t,m:md?md.label:"",d:new Date().toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"})});checkBadges();save();render();toast("Prayer saved");return}
+ const an=e.target.closest("[data-ans]");if(an){const j=S.journal[+an.dataset.ans];j.a=new Date().toLocaleDateString(undefined,{day:"numeric",month:"short",year:"numeric"});save();render();SND.win();toast("Praise God! Prayer answered.");const h=document.querySelector(".ans-head");h&&confetti(h,24);return}
  const uj=e.target.closest("[data-unj]");if(uj){S.journal.splice(+uj.dataset.unj,1);save();render();return}
  const u=e.target.closest("[data-unsave]");if(u){S.saved.splice(+u.dataset.unsave,1);save();render()}
 });
 
 $("#view").addEventListener("input",e=>{if(e.target.id==="setName"){S.name=e.target.value.trim().slice(0,24);save()}});
-$("#view").addEventListener("change",e=>{if(e.target.id==="setName")render()});
+$("#view").addEventListener("change",e=>{if(e.target.id==="setName"){render();syncSoon()}});
+$("#levelup").addEventListener("click",e=>{if(e.target.id==="luClose"){$("#levelup").hidden=true;render()}});
 $("#soundBtn").addEventListener("click",()=>{S.sound=!S.sound;save();stats();SND.tap();if(S.tab==="journey")render()});
 function findVerse(ref){const all=DAILY.map(d=>d.v).concat(MOODS.flatMap(m=>m.vs)).concat(MEMORY.map(m=>[m[1],m[0]]));return all.find(v=>v[1]===ref)}
 function copyVerse(ref){const v=findVerse(ref);if(!v)return;const txt=`“${v[0]}” — ${v[1]} (KJV)`;
@@ -760,7 +1257,7 @@ function copyVerse(ref){const v=findVerse(ref);if(!v)return;const txt=`“${v[0]
  try{navigator.clipboard.writeText(txt).then(done,()=>fallbackCopy(txt))}catch(e){fallbackCopy(txt)}}
 function fallbackCopy(txt){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");toast("Verse copied")}catch(e){toast("Select the text to copy it")}ta.remove()}
 function openOverlay(html){$("#lessonIn").innerHTML=html;$("#lesson").hidden=false;document.body.style.overflow="hidden";$("#lesson").scrollTop=0}
-function closeOverlay(){$("#lesson").hidden=true;document.body.style.overflow="";LS=null;render()}
+function closeOverlay(){sdClose();$("#lesson").hidden=true;document.body.style.overflow="";LS=null;render()}
 function openShare(ref){const v=findVerse(ref);if(!v)return;
  openOverlay(`<div class="lhead"><button class="close" id="lx" aria-label="Close">&times;</button><span class="label">Share a verse</span></div>
  <div class="share-card"><span class="script">A word for today</span><blockquote>“${esc(v[0])}”</blockquote><cite>${esc(v[1])}</cite>
@@ -768,10 +1265,169 @@ function openShare(ref){const v=findVerse(ref);if(!v)return;
  <p style="margin:0;text-align:center;color:var(--muted);font-weight:600">Take a screenshot of this card to post it on WhatsApp or Instagram.</p>
  <div class="row" style="justify-content:center"><button class="btn" data-copyo="${esc(v[1])}">Copy verse text</button><button class="btn ghost" id="lx2">Done</button></div>`)}
 /* onboarding */
+/* pop-up forms for friend code and group */
+function openAsk(kind){const f=kind==="friend";
+ openOverlay(`<div class="lhead"><button class="close" id="lx" aria-label="Close">&times;</button><span class="label">${f?"Add a prayer partner":"Join a group"}</span></div>
+ <div class="ob">${mascot("happy")}<h2>${f?"What’s your friend’s code?":"Name your group"}</h2>
+  <p>${f?"Ask your friend to open the Friends tab and read you the 6-letter code at the top.":"Everyone who types the same name joins the same weekly board, for example your class or church youth group."}</p>
+  <form id="askForm" class="askf" autocomplete="off"><label class="sr" for="askIn">${f?"Friend code":"Group name"}</label>
+   <input id="askIn" type="text" maxlength="${f?8:32}" placeholder="${f?"e.g. K7P2QD":"e.g. nga-youth"}" value="${f?"":esc(S.group||"")}" ${f?'autocapitalize="characters" spellcheck="false"':""}>
+   <p class="ask-err" id="askErr" role="alert"></p>
+   <button class="btn wide" type="submit">${f?"Add partner":"Join group"}</button></form></div>`);
+ const i=$("#askIn");$("#askForm").dataset.kind=kind;setTimeout(()=>{i.focus();i.select()},60)}
+$("#lessonIn").addEventListener("submit",e=>{if(e.target.id!=="askForm")return;e.preventDefault();const kind=e.target.dataset.kind;const raw=$("#askIn").value;const err=$("#askErr");
+ if(kind==="friend"){const v=raw.toUpperCase().replace(/[^A-Z0-9]/g,"");
+  if(v.length!==6){err.textContent="Friend codes have 6 letters and numbers.";return}
+  if(!NET.ready){err.textContent="Friends only work in the online version of Rooted.";return}
+  if(v===codeFor(NET.uid)){err.textContent="That’s your own code. Type your friend’s code instead.";return}
+  const p=NET.profiles.find(x=>x.code===v);if(!p){err.textContent="No one has that code yet. Ask your friend to open the Friends tab first, then try again.";return}
+  S.friends=S.friends||[];if(!S.friends.includes(p.id))S.friends.push(p.id);save();syncNow();closeOverlay();toast(`${p.name} added as a prayer partner`);SND.ok();return}
+ const g=slug(raw);if(!g){err.textContent="Type a group name first.";return}
+ S.group=g;save();syncNow();subGroup();closeOverlay();toast(`Joined ${g}`)});
+/* ================= study room: Bible study dates, live discussion, testimonies ================= */
+function subGroup(){if(!NET.ready)return;const g=S.group||"";if(NET.subG===g)return;NET.subG=g;NET.unsubs.forEach(u=>{try{u()}catch(e){}});NET.unsubs=[];NET.sessions=[];NET.testis=[];
+ if(!g){if(S.tab==="friends")softRender();return}
+ NET.unsubs.push(NET.db.collection("sessions").where("group","==",g).onSnapshot(q=>{NET.sessions=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==="friends")softRender();if(SD.id)sdRefresh()},()=>{}));
+ NET.unsubs.push(NET.db.collection("testimonies").where("group","==",g).onSnapshot(q=>{NET.testis=q.docs.map(d=>({id:d.id,...d.data()}));if(S.tab==="friends")softRender()},()=>{}))}
+const fmtDay=d=>d.toLocaleDateString(undefined,{weekday:"short",day:"numeric",month:"short"});
+const fmtTime=d=>d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"});
+function sessState(x){const t=new Date(x.when).getTime(),n=Date.now();if(n>=t&&n<=t+2*36e5)return "live";if(n<t)return "soon";return "past"}
+function safeLink(u){u=String(u||"").trim();return /^https:\/\/[^\s"'<>]+$/i.test(u)?u:""}
+function passageLink(p){return "https://www.biblegateway.com/passage/?search="+encodeURIComponent(p)+"&version=KJV"}
+function studySection(grp){
+ const head=`<div class="divider" aria-hidden="true"></div><div class="shead"><h2>Study room</h2><span class="script">Gather together</span></div>`;
+ if(!grp)return head+`<div class="buddy">${mascot("wave")}<p class="bubble">Join a group above to plan Bible study dates, talk together and share what God has done.</p></div>`;
+ const list=NET.sessions.filter(x=>sessState(x)!=="past").sort((a,b)=>a.when<b.when?-1:1);
+ const cards=list.length?list.map(x=>{const d=new Date(x.when);const st=sessState(x);const going=Object.keys(x.going||{}).filter(k=>x.going[k]);const me=going.includes(NET.uid);
+  return `<article class="sess ${st}"><div class="sdate"><b>${d.getDate()}</b><span>${d.toLocaleDateString(undefined,{month:"short"})}</span></div>
+   <div class="sbody"><div class="stitle">${st==="live"?'<span class="livepill">Live now</span>':""}<b>${esc(x.title)}</b></div>
+   <span class="smeta">${fmtDay(d)} · ${fmtTime(d)} · ${esc(x.passage||"")}</span>
+   <span class="smeta">Hosted by ${esc(x.hostName||"a friend")} · ${going.length} going</span>
+   <div class="row"><button class="btn ${me?"ghost":""} small" data-going="${x.id}">${me?"Going ✓":"I’m going"}</button><button class="btn small" data-opensess="${x.id}">${st==="live"?"Join the study":"Open"}</button></div></div></article>`}).join(""):`<div class="empty">No Bible studies planned yet. Be the first to pick a date and a passage.</div>`;
+ const tl=NET.testis.slice().sort((a,b)=>b.at-a.at).slice(0,20);
+ const tcards=tl.length?tl.map(t=>{const am=Object.keys(t.amens||{}).filter(k=>t.amens[k]);const mine=am.includes(NET.uid);
+  return `<article class="testi"><header><span class="av sm" aria-hidden="true">${esc((t.name||"?")[0].toUpperCase())}</span><b>${esc(t.name||"A friend")}</b><span>${new Date(t.at).toLocaleDateString(undefined,{day:"numeric",month:"short"})}</span></header><p>${esc(t.text)}</p>
+   <div class="row"><button class="amen ${mine?"on":""}" data-amen="${t.id}" aria-pressed="${mine}">Amen${am.length?` · ${am.length}`:""}</button>${t.uid===NET.uid?`<button class="x" data-untesti="${t.id}">Delete</button>`:""}</div></article>`}).join(""):`<div class="empty">No testimonies yet. What has God done for you lately? Share it to encourage your group.</div>`;
+ return head+`<button class="btn wide" data-plan="1">+ Plan a Bible study</button><div class="sessions">${cards}</div>
+ <div class="shead"><h2 class="soft">What God has done</h2><span class="script">Testimonies</span></div>
+ <button class="btn ghost wide" data-testify="1">Share a testimony</button><div class="testis">${tcards}</div>`}
+function openPlan(){const d=new Date(Date.now()+864e5);const ds=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+ openOverlay(`<div class="lhead"><button class="close" id="lx" aria-label="Close">&times;</button><span class="label">Plan a Bible study</span></div>
+ <div class="ob"><h2>Pick a date and a passage</h2><p>Everyone in <b>${esc(S.group)}</b> will see it and can say they’re going.</p>
+ <form id="planForm" class="askf" autocomplete="off">
+  <label class="flabel" for="pTitle">Title</label><input id="pTitle" type="text" maxlength="60" placeholder="e.g. Friday night Bible study" required>
+  <label class="flabel" for="pPass">Passage</label><input id="pPass" type="text" maxlength="40" placeholder="e.g. John 3" required>
+  <div class="frow"><div><label class="flabel" for="pDate">Date</label><input id="pDate" type="date" value="${ds}" required></div><div><label class="flabel" for="pTime">Time</label><input id="pTime" type="time" value="18:00" required></div></div>
+  <label class="flabel" for="pLink">Call link (optional)</label><input id="pLink" type="url" maxlength="300" placeholder="Google Meet, Zoom or WhatsApp link">
+  <p class="fine">Rooted can’t place calls itself. Paste a link from Google Meet, Zoom or a WhatsApp group call and everyone gets a Join button.</p>
+  <p class="ask-err" id="planErr" role="alert"></p><button class="btn wide" type="submit">Plan it</button></form></div>`);setTimeout(()=>$("#pTitle").focus(),60)}
+function openTestify(){openOverlay(`<div class="lhead"><button class="close" id="lx" aria-label="Close">&times;</button><span class="label">Share a testimony</span></div>
+ <div class="ob">${mascot("cheer")}<h2>What has God done for you?</h2><p>A prayer answered, a hard day He carried you through, something you learned. Your group will see it.</p>
+ <form id="testiForm" class="askf"><label class="sr" for="tText">Your testimony</label><textarea id="tText" maxlength="600" rows="6" placeholder="God has been so good to me…" required></textarea>
+ <p class="ask-err" id="testiErr" role="alert"></p><button class="btn wide" type="submit">Share with my group</button></form></div>`);setTimeout(()=>$("#tText").focus(),60)}
+/* session detail with live chat + who is here now */
+const SD={id:null,msgs:[],unsub:null,room:null,roomUnsub:null,peers:[]};
+function openSession(id){const x=NET.sessions.find(s=>s.id===id);if(!x)return;SD.id=id;SD.msgs=[];SD.peers=[];
+ openOverlay(`<div class="lhead"><button class="close" id="lx" aria-label="Close">&times;</button><span class="label">Study room</span></div><div id="sdHead"></div>
+ <section class="chatbox"><div class="shead"><h2 class="soft">Talk together</h2><span class="script" id="sdHere"></span></div>
+  <div class="msgs" id="sdMsgs" aria-live="polite"><div class="empty">No messages yet. Share what stood out to you in the passage.</div></div>
+  <form id="chatForm" class="chatf" autocomplete="off"><label class="sr" for="chatIn">Message</label><input id="chatIn" type="text" maxlength="400" placeholder="Share a thought or a prayer…"><button class="btn" type="submit">Send</button></form></section>`);
+ sdRefresh();
+ SD.unsub=NET.db.collection("chat").where("sid","==",id).onSnapshot(q=>{SD.msgs=q.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.at-b.at);sdMsgs()},()=>{});
+ (async()=>{try{const room=await claude.use("room");if(!room||SD.id!==id)return;const r=await room.join(("study-"+id).toLowerCase().replace(/[^a-z0-9_.-]/g,"").slice(0,48));if(SD.id!==id){r.leave();return}
+  SD.room=r;r.presence({name:(S.name||"Friend").slice(0,24)});SD.roomUnsub=r.onPeers(ch=>{SD.peers=ch.peers;sdHere()})}catch(e){}})()}
+function sdClose(){if(SD.unsub){try{SD.unsub()}catch(e){}}if(SD.roomUnsub){try{SD.roomUnsub()}catch(e){}}if(SD.room){try{SD.room.leave()}catch(e){}}SD.id=null;SD.unsub=SD.room=SD.roomUnsub=null}
+function sdRefresh(){const x=NET.sessions.find(s=>s.id===SD.id);const h=$("#sdHead");if(!x||!h)return;const d=new Date(x.when);const st=sessState(x);
+ const going=Object.keys(x.going||{}).filter(k=>x.going[k]);const me=going.includes(NET.uid);const link=safeLink(x.link);
+ h.innerHTML=`<section class="sd-hero tex">${st==="live"?'<span class="livepill">Live now</span>':`<span class="label">${fmtDay(d)} · ${fmtTime(d)}</span>`}<h2>${esc(x.title)}</h2>
+  <p>Passage: <b>${esc(x.passage||"")}</b> · hosted by ${esc(x.hostName||"a friend")}</p>
+  <div class="row"><a class="btn" href="${passageLink(x.passage||"")}" target="_blank" rel="noopener">Read ${esc(x.passage||"the passage")}</a>${link?`<a class="btn ghost" href="${esc(link)}" target="_blank" rel="noopener">Join the call</a>`:""}<button class="btn ghost" data-going="${x.id}">${me?"Going ✓":"I’m going"}</button>${x.host===NET.uid?`<button class="x" data-delsess="${x.id}">Cancel study</button>`:""}</div>
+  <div class="going">${going.length?going.map(u=>`<span class="chip-p"><span class="av sm">${esc((nameOf(u)||"?")[0].toUpperCase())}</span>${esc(u===NET.uid?"You":nameOf(u))}</span>`).join(""):'<span class="fine">No one has said they’re going yet.</span>'}</div></section>`}
+function sdHere(){const el=$("#sdHere");if(!el)return;const n=SD.peers.length;el.textContent=n>1?`${n} here now`:n===1?"Just you here":""}
+function sdMsgs(){const el=$("#sdMsgs");if(!el)return;if(!SD.msgs.length){el.innerHTML='<div class="empty">No messages yet. Share what stood out to you in the passage.</div>';return}
+ const atBottom=el.scrollHeight-el.scrollTop-el.clientHeight<60;
+ el.innerHTML=SD.msgs.map(m=>`<div class="msg ${m.uid===NET.uid?"me":""}"><b>${esc(m.uid===NET.uid?"You":(m.name||"Friend"))}</b><p>${esc(m.text)}</p><span>${fmtTime(new Date(m.at))}</span></div>`).join("");
+ if(atBottom||SD.first!==SD.id){el.scrollTop=el.scrollHeight;SD.first=SD.id}}
+async function toggleGoing(id){const x=NET.sessions.find(s=>s.id===id);if(!x)return;const on=!(x.going&&x.going[NET.uid]);
+ try{await NET.db.doc("sessions/"+id).update({going:{[NET.uid]:on}});if(on){toast("See you there!");SND.ok()}}catch(e){toast("Could not save. Try again.")}}
+async function toggleAmen(id){const t=NET.testis.find(s=>s.id===id);if(!t)return;const on=!(t.amens&&t.amens[NET.uid]);
+ try{await NET.db.doc("testimonies/"+id).update({amens:{[NET.uid]:on}});if(on)SND.tap()}catch(e){toast("Could not save. Try again.")}}
+$("#lessonIn").addEventListener("submit",async e=>{const f=e.target;if(!["planForm","testiForm","chatForm"].includes(f.id))return;e.preventDefault();if(!NET.ready)return;
+ if(f.id==="planForm"){const title=$("#pTitle").value.trim(),passage=$("#pPass").value.trim(),dt=$("#pDate").value,tm=$("#pTime").value,rawLink=$("#pLink").value.trim(),err=$("#planErr");
+  if(!title||!passage||!dt||!tm){err.textContent="Fill in the title, passage, date and time.";return}
+  const when=new Date(dt+"T"+tm);if(isNaN(when)){err.textContent="That date or time doesn’t look right.";return}
+  if(when.getTime()<Date.now()-36e5){err.textContent="Pick a date that hasn’t passed yet.";return}
+  const link=rawLink?safeLink(rawLink):"";if(rawLink&&!link){err.textContent="The call link must start with https://";return}
+  try{await NET.db.collection("sessions").add({group:S.group,title,passage,when:when.toISOString(),link,host:NET.uid,hostName:(S.name||"Friend").slice(0,24),going:{[NET.uid]:true},created:Date.now()});closeOverlay();toast("Bible study planned!");SND.win()}
+  catch(er){err.textContent=er&&er.code==="invalid_argument"?"You can view Rooted but not save to it. Ask the owner to share it with you as a Contributor.":"Could not save. Try again."}return}
+ if(f.id==="testiForm"){const text=$("#tText").value.trim(),err=$("#testiErr");if(text.length<3){err.textContent="Write a little more first.";return}
+  try{await NET.db.collection("testimonies").add({group:S.group,uid:NET.uid,name:(S.name||"Friend").slice(0,24),text,at:Date.now(),amens:{}});closeOverlay();toast("Thank you for sharing!");SND.win()}
+  catch(er){err.textContent="Could not share. Try again."}return}
+ if(f.id==="chatForm"){const i=$("#chatIn");const text=i.value.trim();if(!text||!SD.id)return;i.value="";
+  try{await NET.db.collection("chat").add({sid:SD.id,group:S.group,uid:NET.uid,name:(S.name||"Friend").slice(0,24),text,at:Date.now()})}catch(er){i.value=text;toast("Message not sent. Try again.")}}});
+$("#lessonIn").addEventListener("click",e=>{const g=e.target.closest("[data-going]");if(g){toggleGoing(g.dataset.going);return}
+ const ds=e.target.closest("[data-delsess]");if(ds){const id=ds.dataset.delsess;NET.db.doc("sessions/"+id).delete().then(()=>{closeOverlay();toast("Bible study cancelled")},()=>toast("Could not cancel. Try again."))}});
+/* ================= Ask Rooted: question library + Claude (when the viewer allows it) ================= */
+const FAQ=[{"q": "What does it mean to be saved?", "k": "saved salvation save born again christian become heaven eternal", "a": "Being saved means God rescues you from sin and its penalty, and brings you into a forever friendship with Him. You can't earn it. You receive it by trusting that Jesus died for your sins and rose again, and by making Him the Lord of your life. If you've done that, you are His child, and nothing can snatch you away.", "v": [["That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved.", "Romans 10:9"], ["And I give unto them eternal life; and they shall never perish, neither shall any man pluck them out of my hand.", "John 10:28"]]}, {"q": "Why did Jesus have to die?", "k": "why jesus die death cross crucified sacrifice blood", "a": "Sin separates us from a holy God, and the Bible says sin leads to death. Jesus, who never sinned, took our place and paid that price on the cross. Then He rose again, beating death. His death shows how serious sin is, and even more, how huge God's love is.", "v": [["For the wages of sin is death; but the gift of God is eternal life through Jesus Christ our Lord.", "Romans 6:23"], ["For Christ also hath once suffered for sins, the just for the unjust, that he might bring us to God, being put to death in the flesh, but quickened by the Spirit:", "1 Peter 3:18"]]}, {"q": "What does “repent” mean?", "k": "repent repentance turn sorry confess meaning", "a": "To repent means to turn around. You admit to God that you've gone your own way, you're truly sorry, and you choose to turn toward Him and His ways. It isn't about feeling bad forever. It's about a fresh start that God is happy to give.", "v": [["Repent ye therefore, and be converted, that your sins may be blotted out, when the times of refreshing shall come from the presence of the Lord;", "Acts 3:19"], ["If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "1 John 1:9"]]}, {"q": "How do I pray? I don’t know what to say.", "k": "pray prayer how talk words say start", "a": "Prayer is simply talking with God, and He's not grading your words. Try this simple pattern: thank Him for something, tell Him honestly how you feel, say sorry for anything wrong, then ask for what you or others need. You can pray out loud, in your head, or by writing it in your journal.", "v": [["But thou, when thou prayest, enter into thy closet, and when thou hast shut thy door, pray to thy Father which is in secret; and thy Father which seeth in secret shall reward thee openly.", "Matthew 6:6"], ["Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God.", "Philippians 4:6"]]}, {"q": "Where should I start reading the Bible?", "k": "bible read start begin where book reading plan", "a": "A great place to start is the Gospel of John. It shows who Jesus is and why He came. Read one chapter a day, and ask three questions: What does this show me about God? About people? What should I do about it? The Practice tab has a 21-day plan for John to help you.", "v": [["Thy word is a lamp unto my feet, and a light unto my path.", "Psalm 119:105"], ["But these are written, that ye might believe that Jesus is the Christ, the Son of God; and that believing ye might have life through his name.", "John 20:31"]]}, {"q": "I sinned again. Does God still love me?", "k": "sin sinned again still love guilty shame forgive mistake fail messed", "a": "Yes. God's love for you doesn't go up and down with how well you're doing. When you mess up, run to Him, not away. Tell Him honestly, and receive His forgiveness. Growing takes time, and He's patient with you.", "v": [["If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness.", "1 John 1:9"], ["There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit.", "Romans 8:1"]]}, {"q": "Who is the Holy Spirit?", "k": "holy spirit ghost who comforter helper", "a": "The Holy Spirit is God Himself living in every believer. He comforts you, helps you understand the Bible, reminds you of what Jesus said, and gives you strength to live God's way. You are never doing this alone.", "v": [["But the Comforter, which is the Holy Ghost, whom the Father will send in my name, he shall teach you all things, and bring all things to your remembrance, whatsoever I have said unto you.", "John 14:26"], ["But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith,", "Galatians 5:22"]]}, {"q": "Do I have to go to church?", "k": "church go attend need community youth group", "a": "Church isn't a rule to earn God's love. It's a family to grow with. Other believers encourage you, teach you, pray for you, and help you when you're struggling. Look for a church where the Bible is taught and people love Jesus and each other.", "v": [["Not forsaking the assembling of ourselves together, as the manner of some is; but exhorting one another: and so much the more, as ye see the day approaching.", "Hebrews 10:25"], ["And they continued stedfastly in the apostles’ doctrine and fellowship, and in breaking of bread, and in prayers.", "Acts 2:42"]]}, {"q": "What is grace?", "k": "grace mean meaning gift undeserved favour favor", "a": "Grace is God's kindness that we don't deserve and can't earn. Salvation is a gift of grace, received by faith. Grace also keeps working in you every day, helping you change from the inside out.", "v": [["For by grace are ye saved through faith; and that not of yourselves: it is the gift of God:", "Ephesians 2:8"], ["And he said unto me, My grace is sufficient for thee: for my strength is made perfect in weakness. Most gladly therefore will I rather glory in my infirmities, that the power of Christ may rest upon me.", "2 Corinthians 12:9"]]}, {"q": "Why do bad things happen if God is good?", "k": "why bad things happen suffering pain evil good hurt hard", "a": "This is one of the hardest questions, and it's okay to ask it. The world is broken by sin, so pain is real. But God isn't far away from it. Jesus suffered too, and God promises to be with you, to bring good out of hard things, and one day to wipe away every tear.", "v": [["These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world.", "John 16:33"], ["And we know that all things work together for good to them that love God, to them who are the called according to his purpose.", "Romans 8:28"]]}, {"q": "What is baptism?", "k": "baptism baptize baptized water", "a": "Baptism is a public way of showing you belong to Jesus. Going under the water pictures dying to your old life, and coming up pictures new life with Him. Churches do it in different ways, so talk with your pastor about getting baptised.", "v": [["Therefore we are buried with him by baptism into death: that like as Christ was raised up from the dead by the glory of the Father, even so we also should walk in newness of life.", "Romans 6:4"], ["Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost:", "Matthew 28:19"]]}, {"q": "How do I know God hears me?", "k": "hear hears listen answer prayers silent know", "a": "God promises He hears His children. Sometimes His answer is yes, sometimes wait, and sometimes He has something better. Keep praying, keep reading His word, and look back at your answered prayers in your journal to see how He's been faithful.", "v": [["And this is the confidence that we have in him, that, if we ask any thing according to his will, he heareth us:", "1 John 5:14"], ["Call unto me, and I will answer thee, and shew thee great and mighty things, which thou knowest not.", "Jeremiah 33:3"]]}, {"q": "What is the Trinity?", "k": "trinity three father son spirit one god", "a": "Christians believe in one God who exists as three persons: the Father, the Son (Jesus) and the Holy Spirit. They are not three gods, and not one God wearing three masks. It's a mystery bigger than our minds, but we see all three working together throughout the Bible.", "v": [["Go ye therefore, and teach all nations, baptizing them in the name of the Father, and of the Son, and of the Holy Ghost:", "Matthew 28:19"], ["The grace of the Lord Jesus Christ, and the love of God, and the communion of the Holy Ghost, be with you all. Amen.", "2 Corinthians 13:14"]]}, {"q": "How can I tell my friends about Jesus?", "k": "tell friends share faith witness evangelism talk others", "a": "Start with your life: be kind, honest and a good friend. Then share simply what Jesus has done for you, your own story, in your own words. Invite friends to church or your group. You don't need all the answers; God does the changing.", "v": [["But sanctify the Lord God in your hearts: and be ready always to give an answer to every man that asketh you a reason of the hope that is in you with meekness and fear:", "1 Peter 3:15"], ["Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven.", "Matthew 5:16"]]}, {"q": "I have doubts. Is that okay?", "k": "doubt doubts unsure question questions believe real okay", "a": "Yes, doubts are normal, and many people in the Bible had them. Bring your questions honestly to God, keep reading, and talk with a mature Christian you trust. Faith isn't pretending you have no questions. It's trusting God while you look for answers.", "v": [["And straightway the father of the child cried out, and said with tears, Lord, I believe; help thou mine unbelief.", "Mark 9:24"], ["If any of you lack wisdom, let him ask of God, that giveth to all men liberally, and upbraideth not; and it shall be given him.", "James 1:5"]]}, {"q": "How do I hear God’s voice?", "k": "voice hear speak guidance will decision know what god wants", "a": "God mainly speaks through the Bible, so the more you read it, the more you'll recognise His voice. He also guides through prayer, wise Christian friends, and a quiet peace in your heart. Anything truly from God will always agree with His word.", "v": [["My sheep hear my voice, and I know them, and they follow me:", "John 10:27"], ["In all thy ways acknowledge him, and he shall direct thy paths.", "Proverbs 3:6"]]}];
+let SAMPLE=null;(async()=>{try{if(window.claude&&window.claude.use)SAMPLE=await window.claude.use("sample")}catch(e){SAMPLE=null}})();
+const ASK={log:[],turns:[],ctl:null,busy:false,off:false};
+const ASK_RULES=`You are Sprout, the gentle guide inside Rooted, a Bible-learning app for new Christians (many are teenagers). Answer the person's question about God, the Bible or living as a Christian.
+Rules:
+- Warm, simple, everyday English. 2 to 4 short paragraphs, under 170 words in total.
+- Stay faithful to historic Christian teaching shared across denominations. Where Christians genuinely disagree (for example how to baptise, or the end times), say so kindly and suggest asking their pastor.
+- Include 1 to 3 Bible verses from the King James Version, each on its own line in exactly this format: > verse text — Book chapter:verse. Only quote verses you are certain of, word for word.
+- Never shame the person. Point them to God's love, grace and forgiveness.
+- If the question isn't about faith or life, answer briefly and kindly steer back.
+- If they mention abuse, being in danger, or wanting to hurt themselves, respond with care, tell them they matter, and urge them to talk right now to a trusted adult or pastor, or contact local emergency services.
+- When a topic is deep or personal, end by encouraging them to talk it through with a pastor or mature Christian friend.
+- Plain text only: no headings, bullet symbols, bold or markdown other than the > verse lines.`;
+function askCard(){return `<section class="askcard tex"><div class="buddy">${mascot("happy")}<div class="ask-copy"><b>Got a question about faith?</b><p>Ask Rooted anything, like “What does grace mean?”</p></div></div><button class="btn" data-openask="1">Ask Rooted</button></section>`}
+function faqHTML(f){return `<p>${esc(f.a)}</p>${f.v.map(([t,r])=>`<blockquote class="ar-verse">${esc(t)}<cite>${esc(r)}</cite></blockquote>`).join("")}`}
+function aiHTML(text){return text.split(/\n+/).map(l=>l.trim()).filter(Boolean).map(l=>{if(/^>/.test(l)){const body=l.replace(/^>\s*/,"");const m=body.match(/^(.*?)\s*[—–-]{1,2}\s*([1-3]?\s?[A-Za-z][A-Za-z ]+\s\d+:\d+(?:[–-]\d+)?)\s*$/);
+  return m?`<blockquote class="ar-verse">${esc(m[1].replace(/^["“]|["”]$/g,""))}<cite>${esc(m[2])}</cite></blockquote>`:`<blockquote class="ar-verse">${esc(body)}</blockquote>`}return `<p>${esc(l.replace(/\*\*/g,""))}</p>`}).join("")}
+function askLog(){const el=$("#askChat");if(!el)return;
+ el.innerHTML=ASK.log.length?ASK.log.map(m=>m.role==="q"?`<div class="ar-q">${esc(m.text)}</div>`:`<div class="ar-a">${mascot(m.pending?"wave":"happy","ar-sprout")}<div class="ar-body">${m.pending&&!m.text?'<p class="ar-think">Sprout is thinking…</p>':m.faq!=null?faqHTML(FAQ[m.faq]):aiHTML(m.text)}${m.note?`<p class="fine">${esc(m.note)}</p>`:""}</div></div>`).join(""):"";
+ const st=$("#arStop");if(st)st.hidden=!ASK.busy;const sb=$("#arSend");if(sb)sb.disabled=ASK.busy;
+ const L=$("#lesson");if(L&&ASK.log.length){const last=el.lastElementChild;if(last)last.scrollIntoView({block:"nearest",behavior:"smooth"})}}
+function faqMatch(q){const STOP=new Set("the and what does how why who can for you about with that this are have when will god should would could get got keep did does not its it's i'm dont don't just really need want know like mean means is am was were be do my me i a an to of in on it so if or".split(" "));
+ const stem=w=>{w=w.replace(/'s$/,"");for(const suf of ["ning","ing","ized","ised","ize","ise","ed","es","s"])if(w.length>suf.length+2&&w.endsWith(suf))return w.slice(0,-suf.length);return w};
+ const words=q.toLowerCase().replace(/[^a-z' ]/g," ").split(/\s+/).filter(x=>x.length>1&&!STOP.has(x)).map(stem);if(!words.length)return [];
+ const sc=FAQ.map((f,i)=>{const keys=f.k.toLowerCase().split(/\s+/).map(stem),qs=f.q.toLowerCase().replace(/[^a-z' ]/g," ").split(/\s+/).filter(x=>!STOP.has(x)).map(stem);let n=0;
+   for(const w of words){if(keys.some(k=>k===w||(w.length>=4&&k.length>=4&&(k.startsWith(w)||w.startsWith(k)))))n+=2;else if(qs.some(k=>k===w||(w.length>=4&&k.startsWith(w))))n+=1}return [n,i]})
+  .filter(a=>a[0]>0).sort((a,b)=>b[0]-a[0]);return sc.map(a=>a[1])}
+function openAskRooted(){const canAI=!!SAMPLE&&!ASK.off;
+ openOverlay(`<div class="lhead"><button class="close" id="lx" aria-label="Close">&times;</button><span class="label">Ask Rooted</span></div>
+ <div class="ar-hero tex"><div class="buddy">${mascot("wave")}<div><h2>Ask me anything</h2><p>${canAI?"Questions about God, the Bible or following Jesus. I’ll answer simply, with verses.":"Pick a question below, or type one and I’ll find the closest answer."}</p></div></div></div>
+ <div class="askchat" id="askChat" aria-live="polite"></div>
+ <form id="arForm" class="chatf" autocomplete="off"><label class="sr" for="arIn">Your question</label><input id="arIn" type="text" maxlength="400" placeholder="${canAI?"e.g. Why did Jesus have to die?":"Type a few words, e.g. baptism"}"><button class="btn" type="submit" id="arSend">Ask</button></form>
+ <div class="row"><button class="btn small ghost" id="arStop" hidden>Stop</button>${ASK.log.length?'<button class="x" id="arClear">Clear conversation</button>':""}</div>
+ <span class="label">Questions new believers often ask</span>
+ <div class="qchips">${FAQ.map((f,i)=>`<button class="qchip" data-faq="${i}">${esc(f.q)}</button>`).join("")}</div>
+ <p class="fine">Sprout gives a starting point, not the final word. For big questions, talk with a pastor or a Christian you trust.${canAI?" Answers are written by Claude using your Claude account, and you’ll be asked to allow it the first time.":""}</p>`);
+ askLog();setTimeout(()=>{const i=$("#arIn");i&&i.focus()},60)}
+async function askAsk(q){q=q.trim();if(!q||ASK.busy)return;ASK.log.push({role:"q",text:q});
+ if(!SAMPLE||ASK.off){const m=faqMatch(q);if(m.length){ASK.log.push({role:"a",faq:m[0],note:m.length>1?"Related: "+m.slice(1,3).map(i=>FAQ[i].q).join(" · "):""})}else ASK.log.push({role:"a",text:"I don’t have an answer for that one yet. Try one of the questions below, or ask a pastor or a Christian friend you trust."});askLog();return}
+ const ans={role:"a",text:"",pending:true};ASK.log.push(ans);ASK.busy=true;askLog();
+ ASK.turns.push({role:"user",content:q});const turns=ASK.turns.slice(-8);
+ const ctl=new AbortController();ASK.ctl=ctl;
+ try{const r=await SAMPLE([{role:"user",content:ASK_RULES},...turns],{cache:false,signal:ctl.signal,onText:({text})=>{ans.text=text;ans.pending=true;askLog()}});
+  ans.text=r.text;ans.pending=false;if(r.truncated)ans.note="That answer was cut short. Try asking a smaller part of the question.";ASK.turns.push({role:"assistant",content:r.text})}
+ catch(e){ans.pending=false;const code=e&&e.code;ASK.turns.pop();
+  if(code==="cancelled"){ans.text=e.text||"";ans.note="Stopped.";}
+  else if(["not_granted","sampling_disabled","not_declared","capability_disabled","capability_removed"].includes(code)){ASK.off=true;const m=faqMatch(q);if(m.length){ans.faq=m[0];ans.note="Showing an answer from Rooted’s question library."}else{ans.text="I can’t write new answers here, but the questions below have answers ready for you."}}
+  else if(code==="rate_limited"){ans.text=e.text||"";ans.note="Sprout needs a short rest. Try again in a little while."}
+  else if(code==="refused"){ans.text="I can’t help with that one. Please talk with a pastor or a trusted adult."}
+  else if(code==="session_expired"){ans.text="Please sign in to claude.ai again, then ask me again."}
+  else{ans.text=e.text||"";ans.note="Something went wrong. Please try again."}}
+ finally{ASK.busy=false;ASK.ctl=null;askLog()}}
+$("#lessonIn").addEventListener("submit",e=>{if(e.target.id!=="arForm")return;e.preventDefault();const i=$("#arIn");const q=i.value;i.value="";askAsk(q)});
+$("#lessonIn").addEventListener("click",e=>{const f=e.target.closest("[data-faq]");if(f){const i=+f.dataset.faq;ASK.log.push({role:"q",text:FAQ[i].q},{role:"a",faq:i});askLog();return}
+ if(e.target.id==="arStop"){ASK.ctl&&ASK.ctl.abort();return}
+ if(e.target.id==="arClear"){ASK.log=[];ASK.turns=[];askLog();e.target.remove()}});
 let obStep=0;const OB={name:"",stage:"",goal:30};
 function openOnboarding(){OB.name=S.name;OB.stage=S.stage;OB.goal=S.goal||30;drawOb()}
 function drawOb(){const dots=`<div class="dots">${[0,1,2,3].map(k=>`<i class="${k<=obStep?"on":""}"></i>`).join("")}</div>`;let h="";
- if(obStep===0)h=`<div class="ob-hero tex" style="--tex-img:var(--t-arches);--tex-o:.3"><span class="kicker" style="font-family:var(--script);color:var(--pink);font-size:28px">Welcome, friend!</span><h1>ROOT<br>ED</h1></div>
+ if(obStep===0)h=`<div class="ob-hero tex" style="--tex-img:var(--t-arches);--tex-o:.3"><span class="kicker" style="font-family:var(--script);color:var(--pink);font-size:28px">Welcome, friend!</span><h1>ROOT<br>ED</h1></div><div class="buddy">${mascot("happy")}<p class="bubble">Hi! I\u2019m Sprout. I\u2019ll grow with you every day.</p></div>
   <h2>Grow deep roots in God’s word.</h2><p>Short daily lessons, verses for how you feel, and a streak to keep you going. It takes two minutes a day.</p><div class="spacer"></div>${dots}<button class="btn wide" data-ob="next">Let’s begin</button>`;
  if(obStep===1)h=`<span class="script">Nice to meet you</span><h2>What should we call you?</h2><input type="text" id="obName" maxlength="24" placeholder="Your first name" value="${esc(OB.name)}" autocomplete="given-name"><p>Only used for your greeting. It stays on this device.</p><div class="spacer"></div>${dots}<button class="btn wide" data-ob="next">Continue</button>`;
  if(obStep===2)h=`<span class="script">Every journey is different</span><h2>Where are you in your faith?</h2><div class="opts">${[["new","I just gave my life to Jesus","Start from the very beginning"],["growing","I’m growing in my faith","Build strong daily habits"],["returning","I’m coming back to God","A gentle fresh start"]].map(([k,t,sub])=>`<button class="opt" data-obstage="${k}" aria-pressed="${OB.stage===k}">${t}<small>${sub}</small></button>`).join("")}</div><div class="spacer"></div>${dots}<button class="btn wide" data-ob="next" ${OB.stage?"":"disabled"}>Continue</button>`;
@@ -798,7 +1454,7 @@ function drawQ(){
  const ready=q.t==="build"?LS.built.length>0:LS.pick!=null;
  let foot=`<button class="btn wide" id="check" ${ready?"":"disabled"}>Check</button>`;
  if(LS.checked){const ok=LS.lastOk;const cheers=["Amen, that’s right!","Well done!","Spot on!","You’re growing!"];
-  foot=`<div class="feedback ${ok?"ok":"bad"}" id="fb"><h4>${ok?cheers[(LS.i+LS.correct)%cheers.length]:"Not quite"}</h4>${ok?"":`<p><b>Answer:</b> ${esc(q.t==="build"?q.w:q.o[q.a])}</p>`}<p>${esc(q.why)}</p><button class="btn wide" id="next">Continue</button></div>`}
+  foot=`<div class="feedback ${ok?"ok":"bad"}" id="fb"><div class="fb-top">${mascot(ok?(LS.combo>=3?"cheer":"happy"):"sad","fb-sprout")}<h4>${ok?cheers[(LS.i+LS.correct)%cheers.length]:"Not quite"}</h4></div>${ok?"":`<p><b>Answer:</b> ${esc(q.t==="build"?q.w:q.o[q.a])}</p>`}<p>${esc(q.why)}</p><button class="btn wide" id="next">Continue</button></div>`}
  box.innerHTML=head+body+`<div class="spacer"></div>`+foot;
 }
 function drawNoHearts(){
@@ -810,9 +1466,10 @@ function drawNoHearts(){
  <button class="btn ghost wide" id="graceOn">Turn on grace mode (no hearts lost)</button></div>`}
 function drawFinish(){
  const {l,correct}=LS;const perfect=correct===l.qs.length;const gain=correct*5+10+(perfect?5:0);const first=!S.done[l.id];
- S.done[l.id]=true;if(perfect)S.perfect=(S.perfect||0)+1;addXp(gain);
+ if(first)S.justGrew=l.id;S.done[l.id]=true;if(perfect)S.perfect=(S.perfect||0)+1;addXp(gain);
  save();stats();SND.win();buzz([30,40,30]);
  $("#lessonIn").innerHTML=`<div class="finish tex"><span class="script">${first?"Lesson complete!":"Nice review!"}</span>
+ ${mascot("cheer","fin-sprout")}
  <div class="burst" id="finBurst">${burst("#ACC048","#780F0F")}<span><b>+${gain}</b>seeds</span></div>
  <h2>${esc(l.name.toUpperCase())}</h2>${perfect?'<span class="perfect">Perfect lesson! +5 bonus seeds</span>':""}<p>You got ${correct} of ${l.qs.length} right. Your streak is ${S.streak} day${S.streak===1?"":"s"}.</p>
  <div class="spacer"></div><button class="btn wide" id="done">Back to path</button></div>`;
@@ -876,6 +1533,8 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#lesson").hidde
 })();
 
 render();
+initNet();
+matchMedia("(min-width: 1000px)").addEventListener("change",()=>render());
 if(!S.onboarded)openOnboarding();
 </script>
 
